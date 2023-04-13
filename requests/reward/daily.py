@@ -42,7 +42,7 @@ def define_daily(driver):
             if pourcentage_quizz >= 50:
                 print(f"Validated : {', '.join(mots_quizz)}")
                 print(f"Quiz : {pourcentage_quizz:.2f}%")
-                #quiz.quiz_task(driver, define_task(i))
+                quiz.quiz_task(driver, define_task(i))
 
             elif pourcentage_sondage > 50:
                 print(f"Validated : {', '.join(mots_sondage_list)}")

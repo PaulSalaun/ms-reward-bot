@@ -26,4 +26,4 @@ def connect(driver, email, password):
     pass_input.send_keys(password)
     end_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
     end_button.click()
-    time.sleep(10)
+    time.sleep(5)

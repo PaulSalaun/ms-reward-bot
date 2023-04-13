@@ -5,7 +5,7 @@
 2. [x] connect
 3. [ ] define already done
 4. [ ] progress
-4. [x] disconnect
+5. [x] disconnect
     ### Tasks
    1. [x] random task
    2. [x] sondage
