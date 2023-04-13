@@ -1,0 +1,16 @@
+{
+    "profils": [
+        {
+            "email": "account1@ms.com",
+            "password": "pass1"
+        },
+        {
+            "email": "account2@ms.com",
+            "password": "pass2"
+        },
+        {
+            "email": "account3@ms.com",
+            "password": "pass3"
+        }
+    ]
+}
