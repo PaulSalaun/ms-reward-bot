@@ -10,14 +10,12 @@ JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-
 JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
 JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
 
-quiz_list = ["Quiz", "expresso"]
+quiz_list = ["Quiz", "connaissez", "réponse", "expresso", "bonus", "pause-café"]
 sondage_list = ["Sondage", "sondage", "Choisissez", "comparez"]
 
 
 def define_daily(driver):
     wait = WebDriverWait(driver, 10)
-
-    driver.get("https://rewards.bing.com/?signin=1")
 
     chaines_de_caracteres = [(driver.find_element(By.CSS_SELECTOR, JOUR1)).text,
                              (driver.find_element(By.CSS_SELECTOR, JOUR2)).text,
@@ -26,6 +24,7 @@ def define_daily(driver):
     try:
         i = 0
         for consigne in chaines_de_caracteres:
+            driver.refresh()
             mots_chaine = chaines_de_caracteres[i].split()
 
             # Recherche Quizz

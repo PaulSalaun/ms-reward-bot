@@ -17,8 +17,9 @@ def web_surfer(driver):
 
     with open(file_path, 'r') as file:
         words = file.read().split()
+        element = driver.find_element(By.ID, 'sb_form_q')
         for word in words:
-            element = driver.find_element(By.ID, 'sb_form_q')
             element.clear()
+            time.sleep(0.5)
             element.send_keys(word)
             element.submit()

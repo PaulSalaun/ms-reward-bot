@@ -28,24 +28,27 @@ def quiz_task(driver, path_css):
                 run_quiz.click()
                 time.sleep(1)
 
-                # Button for clicking on each answer
                 button_index = 0
                 button_id = "rqAnswerOption" + str(button_index)
-                # Count of good questions
                 good_answer_count = driver.find_element(By.ID, "bt_corOpCnt")
 
                 for question_num in range(1, 4):
+                    button_index = 0
+                    print(good_answer_count)
+                    print(button_index)
                     while good_answer_count != "5":
                         try:
                             button = driver.find_element(By.ID, button_id)
                             button.click()
                             button_index += 1
                             button_id = "rqAnswerOption" + str(button_index)
+                            print(good_answer_count)
                             time.sleep(2)
                         except NoSuchElementException:
                             print("Button not found")
                             break
                     time.sleep(5)
+                time.sleep(5)
 
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
