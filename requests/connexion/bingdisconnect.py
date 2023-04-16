@@ -1,10 +1,13 @@
+import pdb
 import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-LINK = "https://www.bing.com/search?q=test&form=QBLH&sp=-1&lq=0&pq=test&sc=10-4&qs=n&sk=&cvid=0DBE77F2E2C44D9FAAE8BDCFDAC627ED&ghsh=0&ghacc=0&ghpl="
+from requests.connexion import page_cookies
+
+LINK = "https://rewards.microsoft.com/dashboard"
 
 
 def disconnect(driver):
@@ -12,11 +15,21 @@ def disconnect(driver):
     driver.get(LINK)
     time.sleep(1)
 
-    account_button = wait.until(EC.visibility_of_element_located((By.ID, 'id_l')))
-    account_button.click()
+    page_cookies.header_cookies(driver)
 
-    deco_button = wait.until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, '#id_d > div > div.id_signout > a > span')))
+    pdb.set_trace()
+
+    try:
+        account_button = driver.find_element(By.ID, 'img_sec')
+        account_button.click()
+        print('[DISCONNECT]', 'custom PP')
+
+    except:
+        account_button = driver.find_element(By.ID, 'img_sec_default')
+        account_button.click()
+        print('[DISCONNECT]', 'default PP')
+
+    deco_button = wait.until(EC.visibility_of_element_located((By.ID, 'mectrl_body_signOut')))
     deco_button.click()
     time.sleep(2)
 

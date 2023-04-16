@@ -1,5 +1,6 @@
 import json
 import time
+import pdb
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -20,7 +21,13 @@ def connect(driver: WebDriver, email: str, password: str):
         pass_input.send_keys(password)
         end_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
         end_button.click()
+        time.sleep(0.33)
 
-        stayco_button = wait.until(EC.visibility_of_element_located((By.ID, 'idBtn_Back')))
-        stayco_button.click()
-        time.sleep(3)
+        pdb.set_trace()
+
+        if driver.find_element(By.ID, 'idBtn_Back'):
+            stayco_button = wait.until(EC.visibility_of_element_located((By.ID, 'idBtn_Back')))
+            stayco_button.click()
+        time.sleep(1)
+
+        pdb.set_trace()

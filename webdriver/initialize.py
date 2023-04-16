@@ -32,7 +32,7 @@ def run_driver(email, password):
 
     driver = webdriver.Chrome(options=options)
     driver.get('https://rewards.microsoft.com/dashboard')
-    time.sleep(2)
+    time.sleep(1)
 
     bingconnect.connect(driver, email, password)
 
@@ -47,5 +47,4 @@ def run_driver(email, password):
 
     bingdisconnect.disconnect(driver)
     driver.quit()
-
     return rewards

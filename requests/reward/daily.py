@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from requests.connexion import page_cookies
 from requests.reward.types import random, sondage, quiz
 
 JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
@@ -17,6 +18,9 @@ sondage_list = ["Sondage", "sondage", "Choisissez", "comparez"]
 def define_daily(driver):
     wait = WebDriverWait(driver, 10)
 
+    # Look for cookies
+    page_cookies.header_cookies(driver)
+
     chaines_de_caracteres = [(driver.find_element(By.CSS_SELECTOR, JOUR1)).text,
                              (driver.find_element(By.CSS_SELECTOR, JOUR2)).text,
                              (driver.find_element(By.CSS_SELECTOR, JOUR3)).text]
@@ -24,7 +28,6 @@ def define_daily(driver):
     try:
         i = 0
         for consigne in chaines_de_caracteres:
-            driver.refresh()
             mots_chaine = chaines_de_caracteres[i].split()
 
             # Recherche Quizz
