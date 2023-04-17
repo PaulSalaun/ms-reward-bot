@@ -7,7 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 IMG_NOT_VAL = "#quizWelcomeContainer > span.rqWcHeader > span > div > img"
 
-
 def quiz_task(driver, path_css):
     wait = WebDriverWait(driver, 10)
 
@@ -52,6 +51,7 @@ def quiz_task(driver, path_css):
 
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
+                print('[JEU]', 'Done')
 
             else:
                 print("ALREADY VALIDATED")

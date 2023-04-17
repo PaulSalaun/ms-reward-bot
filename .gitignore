@@ -1,3 +1,5 @@
 .idea/
 webdriver/
+*.json
+*.txt
 profils/profils_list.json

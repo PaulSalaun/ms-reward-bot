@@ -17,6 +17,7 @@ def random_task(driver, path_css):
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
+        print('[JEU]', 'Done')
 
     except Exception as e:
         print("The error is: ", e)

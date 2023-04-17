@@ -17,8 +17,6 @@ def disconnect(driver):
 
     page_cookies.header_cookies(driver)
 
-    pdb.set_trace()
-
     try:
         account_button = driver.find_element(By.ID, 'img_sec')
         account_button.click()

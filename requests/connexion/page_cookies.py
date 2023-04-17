@@ -11,6 +11,7 @@ HEADER_COOKIES_BUTTON = "#wcpConsentBannerCtrl > div._2j0fmugLb1FgYz6KPuB91w > b
 
 
 def quit_page_cookies(driver: WebDriver):
+    time.sleep(0.5)
     try:
         driver.find_element(By.ID, COOKIES_ID).click()
         print('[COOKIES]', 'Pop-up cookies closed')

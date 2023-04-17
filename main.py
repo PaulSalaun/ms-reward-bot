@@ -11,7 +11,10 @@ def main():
     result_table = []
     for i in range(0, profile_manager.get_len()):
         email = profile_manager.get_email(i)
-        rewards = initialize.run_driver(profile_manager.get_email(i), profile_manager.get_pass(i))
+        # Computer
+        rewards = initialize.run_driver(profile_manager.get_email(i), profile_manager.get_pass(i), False)
+        # Mobile
+        initialize.run_driver(profile_manager.get_email(i), profile_manager.get_pass(i), True)
 
         result_table.append((email, rewards))
         for row in result_table:
