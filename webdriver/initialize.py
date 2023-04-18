@@ -30,12 +30,8 @@ def run_driver(email: str, password: str, isMobile: bool):
         # Actions for daily research
         search.web_surfer(driver)
 
-        # Get the reward count
-        rewards = reward_count.get_points(driver)
-
         bingdisconnect.disconnect(driver)
         driver.quit()
-        return rewards
 
     else:
         options.add_argument("user-agent=" + MOBILE_USER_AGENT)
@@ -46,5 +42,10 @@ def run_driver(email: str, password: str, isMobile: bool):
         # Mobile search
         search.web_surfer(driver)
 
+        # Get the reward count
+        rewards, streak = reward_count.get_points(driver)
+
         bingdisconnect.disconnect(driver)
         driver.quit()
+
+        return rewards, streak

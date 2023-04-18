@@ -56,7 +56,6 @@ def ceci_cela_task(driver, path_css):
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
 
-
     except Exception as e:
         print("The error is: ", e)
         pass

@@ -1,30 +1,40 @@
-Football
-StadeFrancisLeBle
-Supporters
-Entraineur
-Joueurs
-Ligue1
-Brest
-Finistere
-Bretagne
-Maillot
-Victoire
-Defaite
-CoupeDeFrance
-Ambiance
-Rivalite
-Derby
-Penalty
-GardienDeBut
-Attaquant
-Defenseur
-MilieuDeTerrain
-Transfert
-Formation
-CentreDeFormation
-Match
-Arbitre
-Terrain
-Tifo
-Titre
-Records
+Etoile
+Galaxie
+Planete
+Asteroide
+Comete
+Fusee
+Satellite
+Lune
+Cosmos
+Orbite
+Systeme
+Exploration
+Astronaute
+Station
+Exploration
+Telescope
+Gravite
+Univers
+Atmosphere
+Vaisseau
+Orbital
+Nebuleuse
+Extraterrestre
+Astrologie
+Fusee-sonde
+Exploration spatiale
+Exploration planetaire
+Mission
+Galaxie spirale
+Trous noirs
+Sondage
+Astrometrie
+Science-fiction
+Astrochimie
+Planetarium
+Planete gazeuse
+Espace interstellaire
+Planete naine
+Conquete spatiale
+StadeBrestois

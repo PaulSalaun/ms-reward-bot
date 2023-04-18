@@ -17,6 +17,37 @@ def get_pass(index):
     return selected_profil['password']
 
 
+def get_reward(index):
+    selected_profil = data['profils'][index]
+    return selected_profil['rewards']
+
+
+def set_reward(index, value: str):
+    data['profils'][index]["rewards"] = value
+    try:
+        data["profils"][index]["rewards"] = data["profils"][index]["rewards"].replace("\u202f", "")
+    except:
+        pass
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
+
+def get_streak(index):
+    selected_profil = data['profils'][index]
+    return selected_profil['streak']
+
+
+def set_streak(index, value: str):
+    data['profils'][index]["streak"] = value
+    try:
+        data["profils"][index]["rewards"] = data["profils"][index]["rewards"].replace("\u202f", "")
+    except:
+        pass
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
+
 def get_len():
     nombre_de_profils = len(data['profils'])
     return nombre_de_profils
+
