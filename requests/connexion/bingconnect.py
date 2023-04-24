@@ -42,6 +42,7 @@ def connect(driver: WebDriver, email: str, password: str, isMobile: bool):
                 time.sleep(1)
 
             except NoSuchElementException:
+                print('[STOP]', 'Error in connect')
                 pdb.set_trace()
 
             # Look for web error

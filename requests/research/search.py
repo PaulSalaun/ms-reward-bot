@@ -24,6 +24,7 @@ def web_surfer(driver):
         for word in words:
             # Cookies pop-up closed
             page_cookies.quit_page_cookies(driver)
+
             element = driver.find_element(By.ID, 'sb_form_q')
             element.clear()
 

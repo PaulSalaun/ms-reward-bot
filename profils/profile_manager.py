@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 file_path = os.path.join(dir_path, "profils_list.json")
@@ -46,8 +47,44 @@ def set_streak(index, value: str):
     with open(file_path, 'w') as f:
         json.dump(data, f, indent=4)
 
+def time_started():
+    now = datetime.now()
+    time_string = now.strftime("%Hh%M")
+    data["time_start"] = time_string
+    json.dumps(data, indent=4)
+
+def time_ended():
+    now = datetime.now()
+    time_string = now.strftime("%Hh%M")
+    data["time_end"] = time_string
+    json.dumps(data, indent=4)
+
+
+def tasks_false():
+    for profile in data["profils"]:
+        for task in profile["tasks"]:
+            for key in task:
+                task[key] = False
+    # Print the modified JSON data
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
+
+def task_done(index: int, profil_index: int):
+    if index == 1:
+        task_value = "task1"
+    elif index == 2:
+        task_value = "task2"
+    else:
+        task_value = "task3"
+
+    # Set the value of task[i] to True for the specified profile
+    data["profils"][profil_index]["tasks"][0][task_value] = True
+    # Print the modified JSON data
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
 
 def get_len():
     nombre_de_profils = len(data['profils'])
     return nombre_de_profils
-

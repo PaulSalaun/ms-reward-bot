@@ -1,10 +1,12 @@
 import pdb
 import time
 
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from profils import profile_manager
 from requests.connexion import page_cookies
 from requests.reward.types import random, sondage, quiz, cecicela
 
@@ -17,7 +19,7 @@ sondage_list = ["Sondage", "Choisissez", "comparez", "préférence"]
 ceci_cela_list = ["correctement", "Ceci", "cela?", "jusqu’à", "question,", "50"]
 
 
-def define_daily(driver):
+def define_daily(driver: WebDriver, profil_index: int):
     wait = WebDriverWait(driver, 10)
 
     # Look for cookies
@@ -67,10 +69,13 @@ def define_daily(driver):
                 print('[JEU]', 'Random')
                 random.random_task(driver, define_task(i))
 
+            # Set Task[i] -> Done
+            profile_manager.task_done(i + 1, profil_index)
             i += 1
 
     except Exception as e:
         print("The error is: ", e)
+        pdb.set_trace()
         pass
 
 

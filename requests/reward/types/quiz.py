@@ -24,6 +24,7 @@ def quiz_task(driver, path_css):
 
         # Disconnect error
         error_manager.reconnect_session(driver)
+
         # Cookies pop-up closed
         page_cookies.quit_page_cookies(driver)
 
@@ -56,7 +57,6 @@ def quiz_task(driver, path_css):
 def click_case(driver: WebDriver):
     button_index = 0
     button_id = "rqAnswerOption" + str(button_index)
-    print(driver.find_element(By.ID, 'bt_corOpCnt').text)
     while True:
         try:
             button = driver.find_element(By.ID, button_id)
