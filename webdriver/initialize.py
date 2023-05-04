@@ -18,7 +18,7 @@ MOBILE_USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) Ap
 
 
 def run_driver(profil_index: int, email: str, password: str, isMobile: bool):
-    global rewards, streak
+    global rewards, streak, driver
     options = Options()
     if not isMobile:
         try:
@@ -57,5 +57,7 @@ def run_driver(profil_index: int, email: str, password: str, isMobile: bool):
             return rewards, streak
 
         except Exception as e:
-            print("The error is: ", e)
+            print('[FATAL ERROR]', e)
             pdb.set_trace()
+
+    print('[DISCONNECTED]', email)

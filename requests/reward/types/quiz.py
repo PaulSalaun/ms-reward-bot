@@ -13,7 +13,7 @@ from requests.errors import error_manager
 IMG_NOT_VAL = "#quizWelcomeContainer > span.rqWcHeader > span > div > img"
 
 
-def quiz_task(driver, path_css):
+def quiz_task(driver: WebDriver, path_css: str):
     wait = WebDriverWait(driver, 10)
 
     try:

@@ -5,9 +5,11 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import ElementNotInteractableException
 
 from profils import profile_manager
 from requests.connexion import page_cookies
+from requests.errors import error_manager
 from requests.reward.types import random, sondage, quiz, cecicela
 
 JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
@@ -20,8 +22,6 @@ ceci_cela_list = ["correctement", "Ceci", "cela?", "jusqu’à", "question,", "5
 
 
 def define_daily(driver: WebDriver, profil_index: int):
-    wait = WebDriverWait(driver, 10)
-
     # Look for cookies
     page_cookies.header_cookies(driver)
 
@@ -30,56 +30,72 @@ def define_daily(driver: WebDriver, profil_index: int):
                              (driver.find_element(By.CSS_SELECTOR, JOUR3)).text]
 
     try:
-        i = 0
-        for jeu in chaines_de_caracteres:
-            mots_chaine = jeu.split()
+        assign_task(driver, profil_index, chaines_de_caracteres)
 
-            # Recherche Quizz
-            mots_quizz = [mot for mot in quiz_list if mot in mots_chaine]
-            nb_mots_quizz = len(mots_quizz)
-            pourcentage_quizz = nb_mots_quizz / len(quiz_list) * 100
-
-            # Recherche Ceci cela
-            mots_ceci_cela_list = [mot for mot in ceci_cela_list if mot in mots_chaine]
-            nb_mots_ceci_cela = len(mots_ceci_cela_list)
-            pourcentage_ceci_cela = nb_mots_ceci_cela / len(ceci_cela_list) * 100
-
-            # Recherche sondage_list
-            mots_sondage_list = [mot for mot in sondage_list if mot in mots_chaine]
-            nb_mots_sondage = len(mots_sondage_list)
-            pourcentage_sondage = nb_mots_sondage / len(sondage_list) * 100
-
-            print('[JEU]', {i + 1})
-            if pourcentage_quizz >= 50:
-                # print(f"Validated : {', '.join(mots_quizz)}")
-                print('[JEU]', f"Quiz : {pourcentage_quizz:.2f}%")
-                quiz.quiz_task(driver, define_task(i))
-
-            elif pourcentage_ceci_cela > 50:
-                # print(f"Validated : {', '.join(mots_ceci_cela_list)}")
-                print('[JEU]', f"Ceci cela: {pourcentage_ceci_cela:.2f}%")
-                cecicela.ceci_cela_task(driver, define_task(i))
-
-            elif pourcentage_sondage > 50:
-                # print(f"Validated : {', '.join(mots_sondage_list)}")
-                print('[JEU]', f"Sondage : {pourcentage_sondage:.2f}%")
-                sondage.sondage_task(driver, define_task(i))
-
-            else:
-                print('[JEU]', 'Random')
-                random.random_task(driver, define_task(i))
-
-            # Set Task[i] -> Done
-            profile_manager.task_done(i + 1, profil_index)
-            i += 1
+    except ElementNotInteractableException:
+        print('[ERROR]', 'Element not interactable')
+        time.sleep(1)
+        error_manager.reconnect_session(driver)
+        page_cookies.quit_page_cookies(driver)
+        try:
+            assign_task(driver, profil_index, chaines_de_caracteres)
+        except:
+            print('[ERROR]', 'Never interactable')
+            pdb.set_trace()
+            pass
 
     except Exception as e:
-        print("The error is: ", e)
+        print('[ERROR]', e)
         pdb.set_trace()
         pass
 
 
-def define_task(i):
+def assign_task(driver: WebDriver, profil_index: int, cdc: list):
+    i = 0
+    for jeu in cdc:
+        mots_chaine = jeu.split()
+
+        # Recherche Quizz
+        mots_quizz = [mot for mot in quiz_list if mot in mots_chaine]
+        nb_mots_quizz = len(mots_quizz)
+        pourcentage_quizz = nb_mots_quizz / len(quiz_list) * 100
+
+        # Recherche Ceci cela
+        mots_ceci_cela_list = [mot for mot in ceci_cela_list if mot in mots_chaine]
+        nb_mots_ceci_cela = len(mots_ceci_cela_list)
+        pourcentage_ceci_cela = nb_mots_ceci_cela / len(ceci_cela_list) * 100
+
+        # Recherche sondage_list
+        mots_sondage_list = [mot for mot in sondage_list if mot in mots_chaine]
+        nb_mots_sondage = len(mots_sondage_list)
+        pourcentage_sondage = nb_mots_sondage / len(sondage_list) * 100
+
+        if pourcentage_quizz >= 50:
+            # print(f"Validated : {', '.join(mots_quizz)}")
+            print('[DAILY]', {i + 1}, f"Quiz : {pourcentage_quizz:.2f}%")
+            quiz.quiz_task(driver, define_task(i))
+
+        elif pourcentage_ceci_cela > 50:
+            # print(f"Validated : {', '.join(mots_ceci_cela_list)}")
+            print('[DAILY]', {i + 1}, f"Ceci cela: {pourcentage_ceci_cela:.2f}%")
+            cecicela.ceci_cela_task(driver, define_task(i))
+
+        elif pourcentage_sondage > 50:
+            # print(f"Validated : {', '.join(mots_sondage_list)}")
+            print('[DAILY]', {i + 1}, f"Sondage : {pourcentage_sondage:.2f}%")
+            sondage.sondage_task(driver, define_task(i))
+
+        else:
+            print('[DAILY]', {i + 1}, 'Random')
+            random.random_task(driver, define_task(i))
+
+        # Set Task[i] -> Done
+        # TODO Verify if done
+        profile_manager.task_done(i + 1, profil_index)
+        i += 1
+
+
+def define_task(i: int):
     if i == 0:
         return JOUR1
     elif i == 1:

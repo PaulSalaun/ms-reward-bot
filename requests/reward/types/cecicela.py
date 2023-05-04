@@ -1,5 +1,7 @@
 import pdb
 
+from selenium.webdriver.chrome.webdriver import WebDriver
+
 import random
 import time
 
@@ -14,7 +16,7 @@ ERROR_CONNECT = "body > div.simpleSignIn > div.signInOptions > span > a"
 POINT_GAIN = "#btoHeadPanel > span.rqMenubar > span.rqText > span > span.rqEarnedPoints > span"
 
 
-def ceci_cela_task(driver, path_css):
+def ceci_cela_task(driver: WebDriver, path_css: str):
     wait = WebDriverWait(driver, 10)
     time.sleep(1)
 
@@ -30,10 +32,11 @@ def ceci_cela_task(driver, path_css):
         # Cookies pop-up closed
         page_cookies.quit_page_cookies(driver)
 
-        if driver.find_element(By.ID, "quizCompleteContainer"):
+        try:
+            driver.find_element(By.ID, "quizCompleteContainer")
             print('[CECI-CELA]', '[DONE]', driver.find_element(By.CSS_SELECTOR, POINT_GAIN).text, '/ 50')
 
-        else:
+        except:
             # Commencez à jouer
             run_quiz = wait.until(EC.visibility_of_element_located((By.ID, "rqStartQuiz")))
             run_quiz.click()

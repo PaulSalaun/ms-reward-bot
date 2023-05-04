@@ -8,22 +8,22 @@ with open(file_path, 'r') as f:
     data = json.load(f)
 
 
-def get_email(index):
+def get_email(index: int):
     selected_profil = data['profils'][index]
     return selected_profil['email']
 
 
-def get_pass(index):
+def get_pass(index: int):
     selected_profil = data['profils'][index]
     return selected_profil['password']
 
 
-def get_reward(index):
+def get_reward(index: int):
     selected_profil = data['profils'][index]
     return selected_profil['rewards']
 
 
-def set_reward(index, value: str):
+def set_reward(index: int, value: str):
     data['profils'][index]["rewards"] = value
     try:
         data["profils"][index]["rewards"] = data["profils"][index]["rewards"].replace("\u202f", "")
@@ -33,12 +33,12 @@ def set_reward(index, value: str):
         json.dump(data, f, indent=4)
 
 
-def get_streak(index):
+def get_streak(index: int):
     selected_profil = data['profils'][index]
     return selected_profil['streak']
 
 
-def set_streak(index, value: str):
+def set_streak(index: int, value: str):
     data['profils'][index]["streak"] = value
     try:
         data["profils"][index]["rewards"] = data["profils"][index]["rewards"].replace("\u202f", "")
@@ -47,16 +47,18 @@ def set_streak(index, value: str):
     with open(file_path, 'w') as f:
         json.dump(data, f, indent=4)
 
+
 def time_started():
     now = datetime.now()
     time_string = now.strftime("%Hh%M")
     data["time_start"] = time_string
     json.dumps(data, indent=4)
 
+
 def time_ended():
-    now = datetime.now()
-    time_string = now.strftime("%Hh%M")
-    data["time_end"] = time_string
+    end = datetime.now()
+    time_end_string = end.strftime("%Hh%M")
+    data["time_end"] = time_end_string
     json.dumps(data, indent=4)
 
 

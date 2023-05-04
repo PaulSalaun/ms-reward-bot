@@ -13,7 +13,7 @@ def reconnect_session(driver: WebDriver):
     try:
         driver.find_element(By.CSS_SELECTOR, ERROR_CONNECT).click()
         print('[DISCONNECT]', 'Reconnection done')
-        time.sleep(1)
+        time.sleep(2)
     except:
         pass
 

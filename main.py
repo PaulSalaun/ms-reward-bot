@@ -10,30 +10,25 @@ def main():
     table = PrettyTable()
     table.field_names = ["Email", "Rewards"]
 
-    #Set start time
+    # Set start time
     profile_manager.time_started()
 
-    #Set all task to False
+    # Set all task to False
     profile_manager.tasks_false()
 
     for i in range(0, profile_manager.get_len()):
-        try:
-            # Computer
-            initialize.run_driver(i, profile_manager.get_email(i), profile_manager.get_pass(i), False)
-            # Mobile
-            rewards, streak = initialize.run_driver(i, profile_manager.get_email(i), profile_manager.get_pass(i), True)
+        # Computer
+        initialize.run_driver(i, profile_manager.get_email(i), profile_manager.get_pass(i), False)
+        # Mobile
+        rewards, streak = initialize.run_driver(i, profile_manager.get_email(i), profile_manager.get_pass(i), True)
 
-            profile_manager.set_reward(i, rewards)
-            print('[DATA]', 'Reward updated')
-            print(profile_manager.get_reward(i))
+        profile_manager.set_reward(i, rewards)
+        print('[DATA]', 'Reward updated', profile_manager.get_reward(i))
 
-            profile_manager.set_streak(i, streak)
-            print('[DATA]', 'Streak updated')
-            print(profile_manager.get_streak(i))
-        except:
-            pdb.set_trace()
+        profile_manager.set_streak(i, streak)
+        print('[DATA]', 'Streak updated', profile_manager.get_streak(i))
 
-    #Set end time
+    # Set end time
     profile_manager.time_ended()
 
 
