@@ -9,12 +9,14 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from requests.connexion import page_cookies
 from requests.errors import error_manager
+from utils import time_wait
 
 IMG_NOT_VAL = "#quizWelcomeContainer > span.rqWcHeader > span > div > img"
 
 
-def quiz_task(driver: WebDriver, path_css: str):
+def quiz(driver: WebDriver, path_css: str):
     wait = WebDriverWait(driver, 10)
+
 
     try:
         clicker = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, path_css)))
@@ -28,41 +30,47 @@ def quiz_task(driver: WebDriver, path_css: str):
         # Cookies pop-up closed
         page_cookies.quit_page_cookies(driver)
 
-        try:
-            driver.find_element(By.ID, "quizCompleteContainer")
-            print('[QUIZ]', '[DONE]')
-
-        except:
-            # Commencez à jouer
-            run_quiz = wait.until(EC.visibility_of_element_located((By.ID, "rqStartQuiz")))
-            run_quiz.click()
-
-            while True:
-                try:
-                    driver.find_element(By.ID, "quizCompleteContainer")
-                    break
-                except:
-                    click_case(driver)
-                    time.sleep(2)
+        # *** TASK ***
+        task_quiz(driver)
+        print('[QUIZ]', 'Done')
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
-        print('[JEU]', 'Done')
 
     except Exception as e:
-        print("The error is: ", e)
+        print("The error is in QUIZ: ", e)
         pass
+
+
+def task_quiz(driver: WebDriver):
+    wait = WebDriverWait(driver, 10)
+    error_manager.reconnect_session(driver)
+    page_cookies.quit_page_cookies(driver)
+
+    try:
+        driver.find_element(By.ID, "quizCompleteContainer")
+        print('[QUIZ]', 'Done')
+    except:
+        run_quiz = wait.until(EC.visibility_of_element_located((By.ID, "rqStartQuiz")))
+        run_quiz.click()
+
+        while True:
+            try:
+                driver.find_element(By.ID, "quizCompleteContainer")
+                break
+            except:
+                click_case(driver)
+                time_wait.page_load(driver)
 
 
 def click_case(driver: WebDriver):
     button_index = 0
-    button_id = "rqAnswerOption" + str(button_index)
     while True:
+        button_id = "rqAnswerOption" + str(button_index)
         try:
             button = driver.find_element(By.ID, button_id)
             button.click()
             button_index += 1
-            button_id = "rqAnswerOption" + str(button_index)
-            time.sleep(1)
+            time_wait.page_load(driver)
         except:
             break

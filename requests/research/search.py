@@ -4,6 +4,7 @@ import time
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from requests.connexion import page_cookies
 
@@ -34,6 +35,7 @@ def web_surfer(driver: WebDriver):
 
                 element.send_keys(word)
                 element.submit()
+                wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body")))
             except:
                 print('[ERROR]', 'Refresh needed')
                 driver.refresh()

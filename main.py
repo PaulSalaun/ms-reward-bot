@@ -12,7 +12,6 @@ def main():
 
     # Set start time
     profile_manager.time_started()
-
     # Set all task to False
     profile_manager.tasks_false()
 
@@ -28,9 +27,9 @@ def main():
         profile_manager.set_streak(i, streak)
         print('[DATA]', 'Streak updated', profile_manager.get_streak(i))
 
-    # Set end time
     profile_manager.time_ended()
 
 
 if __name__ == '__main__':
     main()
+

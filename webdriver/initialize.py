@@ -24,11 +24,15 @@ def run_driver(profil_index: int, email: str, password: str, isMobile: bool):
         try:
             options.add_argument("user-agent=" + PC_USER_AGENT)
             driver = webdriver.Chrome(options=options)
+            driver.maximize_window()
 
             bingconnect.connect(driver, email, password, isMobile)
 
             # Actions for daily rewards
             daily.define_daily(driver, profil_index)
+
+            # Do other card
+            daily.other_cards(driver)
 
             # Actions for daily research
             search.web_surfer(driver)
@@ -43,6 +47,7 @@ def run_driver(profil_index: int, email: str, password: str, isMobile: bool):
         try:
             options.add_argument("user-agent=" + MOBILE_USER_AGENT)
             driver = webdriver.Chrome(options=options)
+            driver.maximize_window()
 
             bingconnect.connect(driver, email, password, isMobile)
 

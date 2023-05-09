@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from utils import time_wait
+
 
 def random_task(driver: WebDriver, path_css: str):
     wait = WebDriverWait(driver, 10)
@@ -13,13 +15,12 @@ def random_task(driver: WebDriver, path_css: str):
     try:
         clicker = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, path_css)))
         clicker.click()
-
-        time.sleep(2)
         driver.switch_to.window(driver.window_handles[1])
+        time_wait.page_load(driver)
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
-        print('[JEU]', 'Done')
+        print('[RANDOM]', 'Done')
 
     except Exception as e:
         print("The error is: ", e)

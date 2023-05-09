@@ -16,7 +16,7 @@ def quit_page_cookies(driver: WebDriver):
     try:
         driver.find_element(By.ID, COOKIES_ID).click()
         print('[COOKIES]', 'Pop-up cookies closed')
-    except NoSuchElementException:
+    except:
         pass
 
 
@@ -28,7 +28,6 @@ def quit_reward_banner(driver: WebDriver):
         if "display: none;" not in style_before:
             print('[COOKIES]', 'Reward banner present')
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(1)
             style_before = banner.get_attribute("style")
             if "display: none;" in style_before:
                 print('[COOKIES]', 'Reward banner closed')

@@ -10,7 +10,8 @@ from selenium.common.exceptions import ElementNotInteractableException
 from profils import profile_manager
 from requests.connexion import page_cookies
 from requests.errors import error_manager
-from requests.reward.types import random, sondage, quiz, cecicela
+from requests.reward.other import cards
+from requests.reward.types import default, sondage, quiz, cecicela
 
 JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
 JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
@@ -73,12 +74,12 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
         if pourcentage_quizz >= 50:
             # print(f"Validated : {', '.join(mots_quizz)}")
             print('[DAILY]', {i + 1}, f"Quiz : {pourcentage_quizz:.2f}%")
-            quiz.quiz_task(driver, define_task(i))
+            quiz.quiz(driver, define_task(i))
 
         elif pourcentage_ceci_cela > 50:
             # print(f"Validated : {', '.join(mots_ceci_cela_list)}")
             print('[DAILY]', {i + 1}, f"Ceci cela: {pourcentage_ceci_cela:.2f}%")
-            cecicela.ceci_cela_task(driver, define_task(i))
+            cecicela.ceci_cela(driver, define_task(i))
 
         elif pourcentage_sondage > 50:
             # print(f"Validated : {', '.join(mots_sondage_list)}")
@@ -87,12 +88,21 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
 
         else:
             print('[DAILY]', {i + 1}, 'Random')
-            random.random_task(driver, define_task(i))
+            default.random_task(driver, define_task(i))
 
         # Set Task[i] -> Done
         # TODO Verify if done
         profile_manager.task_done(i + 1, profil_index)
         i += 1
+
+
+def other_cards(driver: WebDriver):
+    try:
+        print('[CARDS]', 'Started')
+        cards.more_cards(driver)
+    except Exception as e:
+        print("Can't do more cards :", e)
+        pass
 
 
 def define_task(i: int):

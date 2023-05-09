@@ -1,6 +1,7 @@
 import pdb
 import time
 
+from selenium.webdriver import Keys
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -8,26 +9,20 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from requests.connexion import page_cookies
 
-LINK = "https://rewards.microsoft.com/dashboard"
+DECO_LINK = "https://rewards.bing.com/Signout"
+CLEAR_DATA_LINK = "chrome://settings/clearBrowserData"
 
 
 def disconnect(driver: WebDriver):
     wait = WebDriverWait(driver, 10)
-    driver.get(LINK)
+    driver.get(DECO_LINK)
     time.sleep(1)
-
-    page_cookies.header_cookies(driver)
-    # Close Reward banner
-    page_cookies.quit_reward_banner(driver)
-
     try:
-        account_button = driver.find_element(By.ID, 'img_sec')
-        account_button.click()
-
-    except:
-        account_button = driver.find_element(By.ID, 'img_sec_default')
-        account_button.click()
-
-    deco_button = wait.until(EC.visibility_of_element_located((By.ID, 'mectrl_body_signOut')))
-    deco_button.click()
-    time.sleep(2)
+        driver.delete_all_cookies()
+        time.sleep(1)
+        # Clear browser datas
+        driver.get(CLEAR_DATA_LINK)
+        wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body")))
+        driver.send_keys(Keys.RETURN)
+    except Exception as e:
+        print('[ERROR]', 'Error in disconnection', e)
