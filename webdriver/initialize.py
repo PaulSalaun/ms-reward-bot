@@ -23,6 +23,7 @@ def run_driver(profil_index: int, email: str, password: str, isMobile: bool):
     if not isMobile:
         try:
             options.add_argument("user-agent=" + PC_USER_AGENT)
+            options.add_argument('--headless')
             driver = webdriver.Chrome(options=options)
             driver.maximize_window()
 
@@ -46,6 +47,7 @@ def run_driver(profil_index: int, email: str, password: str, isMobile: bool):
     else:
         try:
             options.add_argument("user-agent=" + MOBILE_USER_AGENT)
+            options.add_argument('--headless')
             driver = webdriver.Chrome(options=options)
             driver.maximize_window()
 

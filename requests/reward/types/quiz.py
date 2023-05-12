@@ -68,9 +68,13 @@ def click_case(driver: WebDriver):
     while True:
         button_id = "rqAnswerOption" + str(button_index)
         try:
-            button = driver.find_element(By.ID, button_id)
-            button.click()
-            button_index += 1
-            time_wait.page_load(driver)
+            # Loop if timeout during counting to retry
+            if button_index == 10:
+                button_index = 0
+            else:
+                button = driver.find_element(By.ID, button_id)
+                button.click()
+                button_index += 1
+                time_wait.page_load(driver)
         except:
             break

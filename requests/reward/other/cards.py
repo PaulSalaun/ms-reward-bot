@@ -30,8 +30,14 @@ def more_cards(driver: WebDriver):
                     # If done -> pass
                     driver.find_element(By.CSS_SELECTOR, NOT_VALIDATED_CSS.format(i))
 
-                    if "quiz" in card.text.lower().split():
-                        print('[CARD]', i, 'Quiz')
+                    if "quiz" in card.text.lower().split() and "expresso" in card.text.lower().split():
+                        print('[CARD]', i, 'Quiz expresso')
+                        card.click()
+                        driver.switch_to.window(driver.window_handles[1])
+                        time_wait.page_load(driver)
+                        quiz.task_quiz(driver)
+                    elif "quiz" in card.text.lower().split() and "bonus" in card.text.lower().split():
+                        print('[CARD]', i, 'Quiz bonus')
                         card.click()
                         driver.switch_to.window(driver.window_handles[1])
                         time_wait.page_load(driver)
