@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
 
 from profils import profile_manager
 from requests.connexion import page_cookies
@@ -14,14 +14,17 @@ from requests.reward.other import cards
 from requests.reward.types import default, sondage, quiz, cecicela
 from utils import time_wait
 
-#JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
-#JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
-#JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > " \
+        "card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2) > div > card-content > " \
+        "mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3) > div > card-content > " \
+        "mee-rewards-daily-set-item-content > div > a > div.contentContainer"
 
-# TODO LENGHT DAILY
-JOUR1 = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div"
-JOUR2 = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(2)"
-JOUR3 = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(3)"
+JOUR1bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > " \
+           "div > card-content > mee-rewards-daily-set-item-content > div"
+JOUR2bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(2)"
+JOUR3bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(3)"
 
 quiz_list = ["Quiz", "connaissez", "réponse", "expresso", "bonus", "pause-café"]
 sondage_list = ["Sondage", "Choisissez", "comparez", "préférence"]
@@ -33,9 +36,15 @@ def define_daily(driver: WebDriver, profil_index: int):
     page_cookies.header_cookies(driver)
 
     # Define the daily
-    chaines_de_caracteres = [(driver.find_element(By.CSS_SELECTOR, JOUR1)).text,
-                             (driver.find_element(By.CSS_SELECTOR, JOUR2)).text,
-                             (driver.find_element(By.CSS_SELECTOR, JOUR3)).text]
+    chaines_de_caracteres = []
+    try:
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3).text)
+    except NoSuchElementException:
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1bis).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2bis).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3bis).text)
 
     try:
         assign_task(driver, profil_index, chaines_de_caracteres)
@@ -81,21 +90,21 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
         if pourcentage_quizz >= 50:
             # print(f"Validated : {', '.join(mots_quizz)}")
             print('[DAILY]', {i + 1}, f"Quiz : {pourcentage_quizz:.2f}%")
-            quiz.quiz(driver, define_task(i))
+            quiz.quiz(driver, define_task(i, driver))
 
         elif pourcentage_ceci_cela > 50:
             # print(f"Validated : {', '.join(mots_ceci_cela_list)}")
             print('[DAILY]', {i + 1}, f"Ceci cela: {pourcentage_ceci_cela:.2f}%")
-            cecicela.ceci_cela(driver, define_task(i))
+            cecicela.ceci_cela(driver, define_task(i, driver))
 
         elif pourcentage_sondage > 50:
             # print(f"Validated : {', '.join(mots_sondage_list)}")
             print('[DAILY]', {i + 1}, f"Sondage : {pourcentage_sondage:.2f}%")
-            sondage.sondage_task(driver, define_task(i))
+            sondage.sondage_task(driver, define_task(i, driver))
 
         else:
             print('[DAILY]', {i + 1}, 'Random')
-            default.random_task(driver, define_task(i))
+            default.random_task(driver, define_task(i, driver))
 
         # Set Task[i] -> Done
         # TODO Verify if done
@@ -112,10 +121,19 @@ def other_cards(driver: WebDriver):
         pass
 
 
-def define_task(i: int):
+def define_task(i: int, driver: WebDriver):
     if i == 0:
-        return JOUR1
+        if driver.find_element(By.CSS_SELECTOR, JOUR1).is_displayed():
+            return JOUR1
+        else:
+            return JOUR1bis
     elif i == 1:
-        return JOUR2
+        if driver.find_element(By.CSS_SELECTOR, JOUR2).is_displayed():
+            return JOUR2
+        else:
+            return JOUR2bis
     else:
-        return JOUR3
+        if driver.find_element(By.CSS_SELECTOR, JOUR3).is_displayed():
+            return JOUR3
+        else:
+            return JOUR3bis

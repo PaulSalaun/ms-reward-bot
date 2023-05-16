@@ -1,15 +1,8 @@
-import pdb
-
 from webdriver import initialize
 from profils import profile_manager
 
-from prettytable import PrettyTable
-
 
 def main():
-    table = PrettyTable()
-    table.field_names = ["Email", "Rewards"]
-
     # Set start time
     profile_manager.time_started()
     # Set all task to False
@@ -32,4 +25,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
