@@ -12,10 +12,16 @@ from requests.connexion import page_cookies
 from requests.errors import error_manager
 from requests.reward.other import cards
 from requests.reward.types import default, sondage, quiz, cecicela
+from utils import time_wait
 
-JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
-JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
-JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+#JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+#JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+#JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3) > div > card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+
+# TODO LENGHT DAILY
+JOUR1 = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > card-content > mee-rewards-daily-set-item-content > div"
+JOUR2 = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(2)"
+JOUR3 = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(3)"
 
 quiz_list = ["Quiz", "connaissez", "réponse", "expresso", "bonus", "pause-café"]
 sondage_list = ["Sondage", "Choisissez", "comparez", "préférence"]
@@ -26,6 +32,7 @@ def define_daily(driver: WebDriver, profil_index: int):
     # Look for cookies
     page_cookies.header_cookies(driver)
 
+    # Define the daily
     chaines_de_caracteres = [(driver.find_element(By.CSS_SELECTOR, JOUR1)).text,
                              (driver.find_element(By.CSS_SELECTOR, JOUR2)).text,
                              (driver.find_element(By.CSS_SELECTOR, JOUR3)).text]

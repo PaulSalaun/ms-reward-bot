@@ -1,16 +1,45 @@
 {
+    "time_start": "07h25",
+    "time_end": "8h02",
     "profils": [
-        {
+                {
             "email": "account1@ms.com",
-            "password": "pass1"
+            "password": "pass1",
+            "tasks": [
+                {
+                    "task1": false,
+                    "task2": false,
+                    "task3": false
+                }
+            ],
+            "rewards": "0",
+            "streak": "0"
         },
         {
             "email": "account2@ms.com",
-            "password": "pass2"
+            "password": "pass2",
+            "tasks": [
+                {
+                    "task1": true,
+                    "task2": true,
+                    "task3": true
+                }
+            ],
+            "rewards": "1000",
+            "streak": "1"
         },
         {
             "email": "account3@ms.com",
-            "password": "pass3"
+            "password": "pass3",
+            "tasks": [
+                {
+                    "task1": true,
+                    "task2": true,
+                    "task3": true
+                }
+            ],
+            "rewards": "50000",
+            "streak": "8"
         }
     ]
 }

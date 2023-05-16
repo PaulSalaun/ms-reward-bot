@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from requests.connexion import page_cookies
 from requests.errors import error_manager
+from utils import time_wait
 
 POINTS = "#balanceToolTipDiv > p > mee-rewards-counter-animation > span"
 STREAK = "#streakToolTipDiv > p > mee-rewards-counter-animation > span"
@@ -22,6 +23,9 @@ def get_points(driver: WebDriver) -> tuple[str, str]:
     error_manager.error_pipe(driver)
     # Cookies pop-up closed
     page_cookies.quit_page_cookies(driver)
+
+    time_wait.page_load(driver)
+    time.sleep(2)
 
     rewards_nb = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, POINTS))).text
     streaks_nb = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, STREAK))).text
