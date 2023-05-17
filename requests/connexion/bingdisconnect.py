@@ -22,7 +22,7 @@ def disconnect(driver: WebDriver):
         time.sleep(1)
         # Clear browser datas
         driver.get(CLEAR_DATA_LINK)
-        wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body")))
-        driver.send_keys(Keys.RETURN)
+        body = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body")))
+        body.send_keys(Keys.RETURN)
     except Exception as e:
         print('[ERROR]', 'Error in disconnection', e)

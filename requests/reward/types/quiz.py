@@ -11,12 +11,16 @@ from requests.connexion import page_cookies
 from requests.errors import error_manager
 from utils import time_wait
 
+REWARD_URL = "https://rewards.bing.com/"
 IMG_NOT_VAL = "#quizWelcomeContainer > span.rqWcHeader > span > div > img"
+VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div > " \
+            "span.mee-icon.mee-icon-SkypeCircleCheck"
+NOT_VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div " \
+                "> span.mee-icon.mee-icon-AddMedium"
 
 
 def quiz(driver: WebDriver, path_css: str):
     wait = WebDriverWait(driver, 10)
-
 
     try:
         clicker = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, path_css)))
@@ -32,10 +36,19 @@ def quiz(driver: WebDriver, path_css: str):
 
         # *** TASK ***
         task_quiz(driver)
-        print('[QUIZ]', 'Done')
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
+        driver.get(REWARD_URL)
+        time_wait.page_load(driver)
+
+        if driver.find_element(By.CSS_SELECTOR, path_css + VALIDATED):
+            print('[QUIZ]', 'Done')
+        elif driver.find_element(By.CSS_SELECTOR, path_css + NOT_VALIDATED):
+            print('[QUIZ]', 'Not Validated')
+            task_quiz(driver)
+        else:
+            print('[QUIZ]', 'ERROR')
 
     except Exception as e:
         print("The error is in QUIZ: ", e)
@@ -49,7 +62,6 @@ def task_quiz(driver: WebDriver):
 
     try:
         driver.find_element(By.ID, "quizCompleteContainer")
-        print('[QUIZ]', 'Done')
     except:
         run_quiz = wait.until(EC.visibility_of_element_located((By.ID, "rqStartQuiz")))
         run_quiz.click()
@@ -76,5 +88,6 @@ def click_case(driver: WebDriver):
                 button.click()
                 button_index += 1
                 time_wait.page_load(driver)
+                time.sleep(0.5)
         except:
             break

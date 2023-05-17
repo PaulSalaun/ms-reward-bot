@@ -14,15 +14,11 @@ from requests.reward.other import cards
 from requests.reward.types import default, sondage, quiz, cecicela
 from utils import time_wait
 
-JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > div > " \
-        "card-content > mee-rewards-daily-set-item-content > div > a > div.contentContainer"
-JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2) > div > card-content > " \
-        "mee-rewards-daily-set-item-content > div > a > div.contentContainer"
-JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3) > div > card-content > " \
-        "mee-rewards-daily-set-item-content > div > a > div.contentContainer"
+JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double"
+JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2)"
+JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3)"
 
-JOUR1bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double > " \
-           "div > card-content > mee-rewards-daily-set-item-content > div"
+JOUR1bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double"
 JOUR2bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(2)"
 JOUR3bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(3)"
 
@@ -34,17 +30,9 @@ ceci_cela_list = ["correctement", "Ceci", "cela?", "jusqu’à", "question,", "5
 def define_daily(driver: WebDriver, profil_index: int):
     # Look for cookies
     page_cookies.header_cookies(driver)
+    time_wait.page_load(driver)
 
-    # Define the daily
-    chaines_de_caracteres = []
-    try:
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3).text)
-    except NoSuchElementException:
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1bis).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2bis).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3bis).text)
+    chaines_de_caracteres = generate_cdc(driver)
 
     try:
         assign_task(driver, profil_index, chaines_de_caracteres)
@@ -123,17 +111,32 @@ def other_cards(driver: WebDriver):
 
 def define_task(i: int, driver: WebDriver):
     if i == 0:
-        if driver.find_element(By.CSS_SELECTOR, JOUR1).is_displayed():
+        if driver.find_element(By.CSS_SELECTOR, JOUR1):
             return JOUR1
         else:
             return JOUR1bis
     elif i == 1:
-        if driver.find_element(By.CSS_SELECTOR, JOUR2).is_displayed():
+        if driver.find_element(By.CSS_SELECTOR, JOUR2):
             return JOUR2
         else:
             return JOUR2bis
     else:
-        if driver.find_element(By.CSS_SELECTOR, JOUR3).is_displayed():
+        if driver.find_element(By.CSS_SELECTOR, JOUR3):
             return JOUR3
         else:
             return JOUR3bis
+
+
+def generate_cdc(driver: WebDriver):
+    chaines_de_caracteres = []
+    if driver.find_element(By.CSS_SELECTOR, JOUR1):
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3).text)
+    elif driver.find_element(By.CSS_SELECTOR, JOUR1bis):
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1bis).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2bis).text)
+        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3bis).text)
+    else:
+        print('NO CSS')
+    return chaines_de_caracteres

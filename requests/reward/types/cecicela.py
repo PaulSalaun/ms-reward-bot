@@ -13,8 +13,13 @@ from requests.connexion import page_cookies
 from requests.errors import error_manager
 from utils import time_wait
 
+REWARD_URL = "https://rewards.bing.com/"
 ERROR_CONNECT = "body > div.simpleSignIn > div.signInOptions > span > a"
 POINT_GAIN = "#btoHeadPanel > span.rqMenubar > span.rqText > span > span.rqEarnedPoints > span"
+VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div > " \
+            "span.mee-icon.mee-icon-SkypeCircleCheck"
+NOT_VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div " \
+                "> span.mee-icon.mee-icon-AddMedium"
 
 
 def ceci_cela(driver: WebDriver, path_css: str):
@@ -38,6 +43,15 @@ def ceci_cela(driver: WebDriver, path_css: str):
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
+        if driver.current_url != REWARD_URL:
+            driver.get(REWARD_URL)
+        if driver.find_element(By.CSS_SELECTOR, path_css + VALIDATED):
+            print('[CECICELA]', 'Done')
+        elif driver.find_element(By.CSS_SELECTOR, path_css + NOT_VALIDATED):
+            print('[CECICELA]', 'Not Validated')
+            task_cecicela(driver)
+        else:
+            print('[CECICELA]', 'ERROR')
 
     except Exception as e:
         print("The error is: ", e)

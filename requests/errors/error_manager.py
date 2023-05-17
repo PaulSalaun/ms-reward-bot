@@ -25,7 +25,7 @@ def error_pipe(driver: WebDriver):
 def error_502(driver: WebDriver):
     try:
         while True:
-            if driver.find_element(By.ID, ERROR_502_ID).is_displayed():
+            if driver.find_element(By.ID, ERROR_502_ID):
                 time.sleep(10)
                 driver.refresh()
             else:
