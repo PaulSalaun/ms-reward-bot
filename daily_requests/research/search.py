@@ -1,4 +1,5 @@
 import os
+import random
 import time
 
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -6,12 +7,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from requests.connexion import page_cookies
+from daily_requests.connexion import page_cookies
 
 LINK = "https://www.bing.com/"
 
 
-def web_surfer(driver: WebDriver):
+def web_surfer(driver: WebDriver, num_research: int):
     wait = WebDriverWait(driver, 10)
     driver.get(LINK)
 
@@ -21,7 +22,11 @@ def web_surfer(driver: WebDriver):
     with open(file_path, 'r') as file:
         words = file.read().split()
         print('[RESEARCH]', 'Started')
-        for word in words:
+
+        num_words_to_send = min(num_research, len(words))
+        random_words = random.sample(words, num_words_to_send)
+
+        for word in random_words:
             try:
                 # Cookies pop-up closed
                 page_cookies.quit_page_cookies(driver)

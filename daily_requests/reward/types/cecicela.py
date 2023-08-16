@@ -1,4 +1,3 @@
-import pdb
 from random import randint
 
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -9,25 +8,25 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from requests.connexion import page_cookies
-from requests.errors import error_manager
+from daily_requests.connexion import page_cookies
+from daily_requests.errors import error_manager
 from utils import time_wait
 
 REWARD_URL = "https://rewards.bing.com/"
 ERROR_CONNECT = "body > div.simpleSignIn > div.signInOptions > span > a"
 POINT_GAIN = "#btoHeadPanel > span.rqMenubar > span.rqText > span > span.rqEarnedPoints > span"
-VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div > " \
-            "span.mee-icon.mee-icon-SkypeCircleCheck"
-NOT_VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div " \
-                "> span.mee-icon.mee-icon-AddMedium"
+
+VALIDATED = '/div/card-content/mee-rewards-daily-set-item-content/div/a/mee-rewards-points/div/div/span[1]'
+TASK_DONE = 'mee-icon mee-icon-SkypeCircleCheck'
+TASK_NOT_DONE = 'mee-icon mee-icon-AddMedium'
 
 
-def ceci_cela(driver: WebDriver, path_css: str):
+def ceci_cela(driver: WebDriver, xpath: str):
     wait = WebDriverWait(driver, 10)
     time.sleep(1)
 
     try:
-        clicker = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, path_css)))
+        clicker = wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
         clicker.click()
         driver.switch_to.window(driver.window_handles[1])
         time.sleep(1)
@@ -43,15 +42,15 @@ def ceci_cela(driver: WebDriver, path_css: str):
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
-        if driver.current_url != REWARD_URL:
-            driver.get(REWARD_URL)
-        if driver.find_element(By.CSS_SELECTOR, path_css + VALIDATED):
-            print('[CECICELA]', 'Done')
-        elif driver.find_element(By.CSS_SELECTOR, path_css + NOT_VALIDATED):
-            print('[CECICELA]', 'Not Validated')
-            task_cecicela(driver)
+
+        validation_task = driver.find_element(By.XPATH, xpath + VALIDATED)
+        if validation_task.get_attribute("class") == TASK_DONE:
+            print('[CECI-CELA]', 'Done')
+        elif validation_task.get_attribute("class") == TASK_NOT_DONE:
+            print('[CECI_CELA]', 'Not Validated')
+            ceci_cela(driver, xpath)
         else:
-            print('[CECICELA]', 'ERROR')
+            print('[CECI-CELA]', 'ERROR')
 
     except Exception as e:
         print("The error is: ", e)

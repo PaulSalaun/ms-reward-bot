@@ -1,29 +1,27 @@
-import pdb
 import time
 
-from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from requests.connexion import page_cookies
-from requests.errors import error_manager
+from daily_requests.connexion import page_cookies
+from daily_requests.errors import error_manager
 from utils import time_wait
 
 REWARD_URL = "https://rewards.bing.com/"
 IMG_NOT_VAL = "#quizWelcomeContainer > span.rqWcHeader > span > div > img"
-VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div > " \
-            "span.mee-icon.mee-icon-SkypeCircleCheck"
-NOT_VALIDATED = " > div > card-content > mee-rewards-daily-set-item-content > div > a > mee-rewards-points > div > div " \
-                "> span.mee-icon.mee-icon-AddMedium"
+
+VALIDATED = '/div/card-content/mee-rewards-daily-set-item-content/div/a/mee-rewards-points/div/div/span[1]'
+TASK_DONE = 'mee-icon mee-icon-SkypeCircleCheck'
+TASK_NOT_DONE = 'mee-icon mee-icon-AddMedium'
 
 
-def quiz(driver: WebDriver, path_css: str):
+def quiz(driver: WebDriver, xpath: str):
     wait = WebDriverWait(driver, 10)
 
     try:
-        clicker = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, path_css)))
+        clicker = wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
         clicker.click()
         time.sleep(1)
         driver.switch_to.window(driver.window_handles[1])
@@ -42,9 +40,10 @@ def quiz(driver: WebDriver, path_css: str):
         driver.get(REWARD_URL)
         time_wait.page_load(driver)
 
-        if driver.find_element(By.CSS_SELECTOR, path_css + VALIDATED):
+        validation_task = driver.find_element(By.XPATH, xpath + VALIDATED)
+        if validation_task.get_attribute("class") == TASK_DONE:
             print('[QUIZ]', 'Done')
-        elif driver.find_element(By.CSS_SELECTOR, path_css + NOT_VALIDATED):
+        elif validation_task.get_attribute("class") == TASK_NOT_DONE:
             print('[QUIZ]', 'Not Validated')
             task_quiz(driver)
         else:

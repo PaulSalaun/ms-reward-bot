@@ -3,24 +3,18 @@ import time
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
+from selenium.common.exceptions import ElementNotInteractableException
 
 from profils import profile_manager
-from requests.connexion import page_cookies
-from requests.errors import error_manager
-from requests.reward.other import cards
-from requests.reward.types import default, sondage, quiz, cecicela
+from daily_requests.connexion import page_cookies
+from daily_requests.errors import error_manager
+from daily_requests.reward.other import cards
+from daily_requests.reward.types import default, sondage, quiz, cecicela
 from utils import time_wait
 
-JOUR1 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double"
-JOUR2 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(2)"
-JOUR3 = "#daily-sets > mee-card-group:nth-child(7) > div > mee-card:nth-child(3)"
-
-JOUR1bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card.ng-scope.ng-isolate-scope.c-card.f-double"
-JOUR2bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(2)"
-JOUR3bis = "#daily-sets > mee-card-group:nth-child(5) > div > mee-card:nth-child(3)"
+JOUR1 = '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[1]'
+JOUR2 = '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[2]'
+JOUR3 = '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[3]'
 
 quiz_list = ["Quiz", "connaissez", "réponse", "expresso", "bonus", "pause-café"]
 sondage_list = ["Sondage", "Choisissez", "comparez", "préférence"]
@@ -94,9 +88,6 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
             print('[DAILY]', {i + 1}, 'Random')
             default.random_task(driver, define_task(i, driver))
 
-        # Set Task[i] -> Done
-        # TODO Verify if done
-        profile_manager.task_done(i + 1, profil_index)
         i += 1
 
 
@@ -111,32 +102,19 @@ def other_cards(driver: WebDriver):
 
 def define_task(i: int, driver: WebDriver):
     if i == 0:
-        if driver.find_element(By.CSS_SELECTOR, JOUR1):
-            return JOUR1
-        else:
-            return JOUR1bis
+        return JOUR1
     elif i == 1:
-        if driver.find_element(By.CSS_SELECTOR, JOUR2):
-            return JOUR2
-        else:
-            return JOUR2bis
+        return JOUR2
     else:
-        if driver.find_element(By.CSS_SELECTOR, JOUR3):
-            return JOUR3
-        else:
-            return JOUR3bis
+        return JOUR3
 
 
 def generate_cdc(driver: WebDriver):
     chaines_de_caracteres = []
-    if driver.find_element(By.CSS_SELECTOR, JOUR1):
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3).text)
-    elif driver.find_element(By.CSS_SELECTOR, JOUR1bis):
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR1bis).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR2bis).text)
-        chaines_de_caracteres.append(driver.find_element(By.CSS_SELECTOR, JOUR3bis).text)
+    if driver.find_element(By.XPATH, JOUR1):
+        chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR1).text)
+        chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR2).text)
+        chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR3).text)
     else:
         print('NO CSS')
     return chaines_de_caracteres

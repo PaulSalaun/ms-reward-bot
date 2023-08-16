@@ -3,24 +3,18 @@ from profils import profile_manager
 
 
 def main():
-    # Set start time
-    profile_manager.time_started()
-    # Set all task to False
-    profile_manager.tasks_false()
 
     for i in range(0, profile_manager.get_len()):
-        # Computer
-        initialize.run_driver(i, profile_manager.get_email(i), profile_manager.get_pass(i), False)
-        # Mobile
-        rewards, streak = initialize.run_driver(i, profile_manager.get_email(i), profile_manager.get_pass(i), True)
+
+        rewards, streak = initialize.daily_tasks(i, profile_manager.get_email(i), profile_manager.get_pass(i))
 
         profile_manager.set_reward(i, rewards)
         print('[DATA]', 'Reward updated', profile_manager.get_reward(i))
-
         profile_manager.set_streak(i, streak)
         print('[DATA]', 'Streak updated', profile_manager.get_streak(i))
 
-    profile_manager.time_ended()
+        initialize.pc_search(profile_manager.get_email(i), profile_manager.get_pass(i))
+        initialize.mobie_search(profile_manager.get_email(i), profile_manager.get_pass(i))
 
 
 if __name__ == '__main__':

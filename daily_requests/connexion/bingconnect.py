@@ -8,15 +8,18 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-from requests.errors import error_manager
+from daily_requests.errors import error_manager
 
+REWARD = "https://rewards.microsoft.com/dashboard"
 LINK = "https://www.bing.com/"
+CONNECT_LINK = "https://login.live.com/"
 
 
-def connect(driver: WebDriver, email: str, password: str, isMobile: bool):
+# 1: DAILY / 2: PC SEARCH / 3: MOBILE SEARCH
+def connect(driver: WebDriver, email: str, password: str, momentum: int):
     wait = WebDriverWait(driver, 10)
 
-    if not isMobile:
+    if momentum == 1:
         driver.get('https://rewards.microsoft.com/dashboard')
         time.sleep(1)
 
@@ -25,16 +28,7 @@ def connect(driver: WebDriver, email: str, password: str, isMobile: bool):
 
         try:
             print('[WEB]', email)
-            email_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0116')))
-            email_input.send_keys(email)
-            next_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
-            next_button.click()
-
-            pass_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0118')))
-            pass_input.send_keys(password)
-            end_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
-            end_button.click()
-            time.sleep(0.33)
+            email_connect(driver, email, password)
 
             if driver.find_element(By.ID, 'idBtn_Back'):
                 stayco_button = wait.until(EC.visibility_of_element_located((By.ID, 'idBtn_Back')))
@@ -48,7 +42,16 @@ def connect(driver: WebDriver, email: str, password: str, isMobile: bool):
         # Look for web error
         error_manager.error_pipe(driver)
 
-    else:
+    elif momentum == 2:
+        driver.get(CONNECT_LINK)
+        print('[PC]', email)
+        try:
+            email_connect(driver, email, password)
+
+        except Exception as e:
+            print('[ERROR]', 'At pc connect', e)
+
+    elif momentum == 3:
         driver.get(LINK)
         print('[MOBILE]', email)
         time.sleep(1)
@@ -60,16 +63,27 @@ def connect(driver: WebDriver, email: str, password: str, isMobile: bool):
         time.sleep(1)
 
         try:
-            email_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0116')))
-            email_input.send_keys(email)
-            next_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
-            next_button.click()
-
-            pass_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0118')))
-            pass_input.send_keys(password)
-            end_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
-            end_button.click()
-            time.sleep(0.33)
+            email_connect(driver, email, password)
 
         except Exception as e:
             print('[ERROR]', 'At mobile connect', e)
+
+    else:
+        raise ConnectionError("Type is not Daily/PC/MOBILE")
+
+
+def email_connect(driver: WebDriver, email: str, password: str):
+    wait = WebDriverWait(driver, 10)
+
+    email_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0116')))
+    email_input.send_keys(email)
+    next_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
+    next_button.click()
+
+    # pdb.set_trace()
+
+    pass_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0118')))
+    pass_input.send_keys(password)
+    end_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
+    end_button.click()
+    time.sleep(0.33)

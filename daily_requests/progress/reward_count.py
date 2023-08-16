@@ -7,8 +7,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from requests.connexion import page_cookies
-from requests.errors import error_manager
+from daily_requests.connexion import page_cookies
+from daily_requests.errors import error_manager
 from utils import time_wait
 
 POINTS = "#balanceToolTipDiv > p > mee-rewards-counter-animation > span"

@@ -42,5 +42,6 @@ def header_cookies(driver: WebDriver):
     try:
         driver.find_element(By.CSS_SELECTOR, HEADER_COOKIES_BUTTON).click()
         print('[COOKIES]', 'Header cookies closed')
+        time.sleep(1)
     except NoSuchElementException:
         pass

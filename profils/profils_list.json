@@ -1,45 +1,30 @@
 {
-    "time_start": "07h25",
-    "time_end": "8h02",
+    "time_start": "09h00",
+    "time_end": "8h57",
     "profils": [
-                {
-            "email": "account1@ms.com",
-            "password": "pass1",
-            "tasks": [
-                {
-                    "task1": false,
-                    "task2": false,
-                    "task3": false
-                }
-            ],
-            "rewards": "0",
-            "streak": "0"
+        {
+            "email": "leon.moccacino@outlook.fr",
+            "password": "leon!976mocca{}duff",
+            "rewards": "422",
+            "streak": "2"
         },
         {
-            "email": "account2@ms.com",
-            "password": "pass2",
-            "tasks": [
-                {
-                    "task1": true,
-                    "task2": true,
-                    "task3": true
-                }
-            ],
-            "rewards": "1000",
-            "streak": "1"
+            "email": "helene.barrista@outlook.com",
+            "password": "gingerrhumolive76",
+            "rewards": "1533",
+            "streak": "2"
         },
         {
-            "email": "account3@ms.com",
-            "password": "pass3",
-            "tasks": [
-                {
-                    "task1": true,
-                    "task2": true,
-                    "task3": true
-                }
-            ],
-            "rewards": "50000",
-            "streak": "8"
+            "email": "lionel.potofeu@hotmail.com",
+            "password": "lioneldesusa69000ivoire",
+            "rewards": "2921",
+            "streak": "2"
+        },
+        {
+            "email": "killian.grenadine@outlook.fr",
+            "password": "killianMonaco7834!",
+            "rewards": "2425",
+            "streak": "2"
         }
     ]
 }
