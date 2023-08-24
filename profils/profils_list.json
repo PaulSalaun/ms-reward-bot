@@ -3,28 +3,10 @@
     "time_end": "8h57",
     "profils": [
         {
-            "email": "leon.moccacino@outlook.fr",
-            "password": "leon!976mocca{}duff",
-            "rewards": "422",
-            "streak": "2"
-        },
-        {
-            "email": "helene.barrista@outlook.com",
-            "password": "gingerrhumolive76",
-            "rewards": "1533",
-            "streak": "2"
-        },
-        {
-            "email": "lionel.potofeu@hotmail.com",
-            "password": "lioneldesusa69000ivoire",
-            "rewards": "2921",
-            "streak": "2"
-        },
-        {
-            "email": "killian.grenadine@outlook.fr",
-            "password": "killianMonaco7834!",
-            "rewards": "2425",
-            "streak": "2"
+            "email": "",
+            "password": "",
+            "rewards": "",
+            "streak": ""
         }
     ]
 }

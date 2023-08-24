@@ -19,6 +19,7 @@ POPUP_CLOSE = "//*[@id='modal-host']/div[2]"
 LINK_ACTUALITE = "//*[@id='legalTextBox']/div/div/div[3]/a"
 
 STATUS_CHECKED = "mee-icon mee-icon-SkypeCircleCheck"
+NOT_EDGED = "//*[@id='legalTextBox']/div/div/div[3]/a/span/ng-transclude"
 
 
 def more_cards(driver: WebDriver):
@@ -46,6 +47,12 @@ def more_cards(driver: WebDriver):
                         driver.switch_to.window(driver.window_handles[1])
                         time_wait.page_load(driver)
                         quiz.task_quiz(driver)
+                    if "quiz" in card.text.lower().split() and "pause-café" in card.text.lower().split():
+                        print('[CARD]', i, 'Quiz bonus')
+                        card.click()
+                        driver.switch_to.window(driver.window_handles[1])
+                        time_wait.page_load(driver)
+                        quiz.task_quiz(driver)
                     elif "cela?" in card.text.lower().split():
                         print('[CARD]', i, 'Ceci cela')
                         card.click()
@@ -64,6 +71,13 @@ def more_cards(driver: WebDriver):
                         card.click()
                         wait.until(EC.visibility_of_element_located((By.ID, "welcome-tour-slide")))
                         driver.find_element(By.XPATH, "//*[@id='modal-host']/div[2]/button").click()
+                        driver.switch_to.window(driver.window_handles[1])
+                        time_wait.page_load(driver)
+                    elif "microsoft" in card.text.lower().split() and "edge" in card.text.lower().split():
+                        print('[CARD]', i, 'Not Edge')
+                        card.click()
+                        wait.until(EC.visibility_of_element_located((By.XPATH, NOT_EDGED)))
+                        driver.find_element(By.XPATH, NOT_EDGED).click()
                         driver.switch_to.window(driver.window_handles[1])
                         time_wait.page_load(driver)
                     else:

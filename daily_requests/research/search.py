@@ -1,4 +1,5 @@
 import os
+import pdb
 import random
 import time
 
@@ -8,16 +9,28 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from daily_requests.connexion import page_cookies
+from utils import time_wait
 
 LINK = "https://www.bing.com/"
 
 
-def web_surfer(driver: WebDriver, num_research: int):
+def web_surfer(driver: WebDriver, num_research: int, isPC: int = 0):
     wait = WebDriverWait(driver, 10)
     driver.get(LINK)
+    time_wait.page_load(driver)
+    page_cookies.quit_page_cookies(driver)
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(dir_path, "words.txt")
+
+    if isPC == 1:
+        print('[PC]', 'Connecting...')
+        page_cookies.quit_page_cookies(driver)
+        connect = driver.find_element(By.ID, "id_s")
+        try:
+            connect.click()
+        except:
+            pass
 
     with open(file_path, 'r') as file:
         words = file.read().split()
@@ -46,4 +59,3 @@ def web_surfer(driver: WebDriver, num_research: int):
                 driver.refresh()
                 time.sleep(1)
     print('[RESEARCH]', 'Done')
-

@@ -34,7 +34,7 @@ def daily_tasks(profil_index: int, email: str, password: str) -> tuple[str, str]
 
 
 options = Options()
-options.add_argument("--headless")
+# options.add_argument("--headless")
 options.add_argument("--disable-gpu")
 
 
@@ -43,7 +43,7 @@ def pc_search(email: str, password: str):
     options.add_argument("user-agent=" + PC_USER_AGENT)
     driver = webdriver.Chrome(options=options)
     bingconnect.connect(driver, email, password, 2)
-    search.web_surfer(driver, 30)
+    search.web_surfer(driver, 35, 1)
     bingdisconnect.disconnect(driver)
     print('[DISCONNECTED][PC SEARCH]', email)
     driver.quit()
@@ -53,9 +53,8 @@ def pc_search(email: str, password: str):
 def mobie_search(email: str, password: str):
     options.add_argument("user-agent=" + MOBILE_USER_AGENT)
     driver = webdriver.Chrome(options=options)
-    driver.maximize_window()
     bingconnect.connect(driver, email, password, 3)
-    search.web_surfer(driver, 20)
+    search.web_surfer(driver, 25)
     bingdisconnect.disconnect(driver)
     print('[DISCONNECTED][MOBILE SEARCH]', email)
     driver.quit()
