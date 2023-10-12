@@ -2,6 +2,7 @@ import pdb
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 from daily_requests.connexion import bingconnect
 from daily_requests.connexion import bingdisconnect
@@ -21,7 +22,7 @@ CHROMEDRIVER_PATH = './chromedriver.exe'
 
 # DO DAILY TASKS
 def daily_tasks(profil_index: int, email: str, password: str) -> tuple[str, str]:
-    driver = uc.Chrome()
+    driver = uc.Chrome(headless="false")
     driver.maximize_window()
     bingconnect.connect(driver, email, password, 1)
     daily.define_daily(driver, profil_index)

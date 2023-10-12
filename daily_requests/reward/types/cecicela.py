@@ -42,6 +42,8 @@ def ceci_cela(driver: WebDriver, xpath: str):
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
+        driver.refresh()
+        time_wait.page_load(driver)
 
         validation_task = driver.find_element(By.XPATH, xpath + VALIDATED)
         if validation_task.get_attribute("class") == TASK_DONE:

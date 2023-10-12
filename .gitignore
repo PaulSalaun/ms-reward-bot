@@ -2,4 +2,5 @@
 webdriver/
 *.json
 *.txt
-profils/profils_list.json
+profils_list*
+*.spec

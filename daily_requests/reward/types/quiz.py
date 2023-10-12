@@ -1,3 +1,4 @@
+import pdb
 import time
 
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -31,7 +32,6 @@ def quiz(driver: WebDriver, xpath: str):
 
         # Cookies pop-up closed
         page_cookies.quit_page_cookies(driver)
-
         # *** TASK ***
         task_quiz(driver)
 
@@ -66,6 +66,7 @@ def task_quiz(driver: WebDriver):
         run_quiz.click()
 
         while True:
+            time.sleep(1)
             try:
                 driver.find_element(By.ID, "quizCompleteContainer")
                 break
@@ -76,17 +77,20 @@ def task_quiz(driver: WebDriver):
 
 def click_case(driver: WebDriver):
     button_index = 0
+    winnable = 0
+    wait = WebDriverWait(driver, 5)
     while True:
-        button_id = "rqAnswerOption" + str(button_index)
+        time_wait.page_load(driver)
+        button = wait.until(EC.visibility_of_element_located((By.ID, "rqAnswerOption" + str(button_index))))
         try:
-            # Loop if timeout during counting to retry
-            if button_index == 10:
-                button_index = 0
-            else:
-                button = driver.find_element(By.ID, button_id)
+            if button.get_attribute("iscorrectoption") == "True":
                 button.click()
-                button_index += 1
-                time_wait.page_load(driver)
-                time.sleep(0.5)
+                winnable += 1
+            else:
+                button.click()
+
+            button_index += 1
+            if winnable == 5:
+                break
         except:
             break
