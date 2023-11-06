@@ -59,6 +59,7 @@ def task_quiz(driver: WebDriver):
     error_manager.reconnect_session(driver)
     page_cookies.quit_page_cookies(driver)
 
+    time_wait.page_load(driver)
     try:
         driver.find_element(By.ID, "quizCompleteContainer")
     except:
@@ -89,6 +90,7 @@ def click_case(driver: WebDriver):
             else:
                 button.click()
 
+            time.sleep(1)
             button_index += 1
             if winnable == 5:
                 break

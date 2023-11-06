@@ -53,7 +53,7 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
     i = 0
     for jeu in cdc:
         mots_chaine = jeu.split()
-
+        print(mots_chaine)
         # Recherche Quizz
         mots_quizz = [mot for mot in quiz_list if mot in mots_chaine]
         nb_mots_quizz = len(mots_quizz)

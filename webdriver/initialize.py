@@ -2,7 +2,6 @@ import pdb
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 
 from daily_requests.connexion import bingconnect
 from daily_requests.connexion import bingdisconnect
@@ -22,7 +21,9 @@ CHROMEDRIVER_PATH = './chromedriver.exe'
 
 # DO DAILY TASKS
 def daily_tasks(profil_index: int, email: str, password: str) -> tuple[str, str]:
-    driver = uc.Chrome(headless="false")
+    optionshadow = Options()
+    optionshadow.add_argument("--headless")
+    driver = uc.Chrome(optionshadow)
     driver.maximize_window()
     bingconnect.connect(driver, email, password, 1)
     daily.define_daily(driver, profil_index)
@@ -30,12 +31,13 @@ def daily_tasks(profil_index: int, email: str, password: str) -> tuple[str, str]
     rewards, streak = reward_count.get_points(driver)
     bingdisconnect.disconnect(driver)
     print('[DISCONNECTED][DAILY]', email)
+    driver.close()
     driver.quit()
     return rewards, streak
 
 
 options = Options()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_argument("--disable-gpu")
 
 
