@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 from daily_requests.errors import error_manager
+from utils import time_wait
 
 REWARD = "https://rewards.microsoft.com/dashboard"
 LINK = "https://www.bing.com/"
@@ -30,10 +31,19 @@ def connect(driver: WebDriver, email: str, password: str, momentum: int):
             print('[WEB]', email)
             email_connect(driver, email, password)
 
+            if driver.find_element(By.ID, 'iLandingViewAction'):
+                security = wait.until(EC.visibility_of_element_located((By.ID, 'iLandingViewAction')))
+                security.click()
+                print('[CONNECT]', 'Security popup')
+
+            time_wait.page_load(driver)
+
             if driver.find_element(By.ID, 'idBtn_Back'):
                 stayco_button = wait.until(EC.visibility_of_element_located((By.ID, 'idBtn_Back')))
                 stayco_button.click()
-            time.sleep(1)
+                print('[CONNECT]', 'Stay connected popup')
+
+            time_wait.page_load(driver)
 
         except NoSuchElementException:
             print('[STOP]', 'Error in connect')

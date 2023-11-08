@@ -18,7 +18,7 @@ TASK_DONE = 'mee-icon mee-icon-SkypeCircleCheck'
 TASK_NOT_DONE = 'mee-icon mee-icon-AddMedium'
 
 
-def quiz(driver: WebDriver, xpath: str):
+def quiz(driver: WebDriver, xpath: str, style: int):
     wait = WebDriverWait(driver, 10)
 
     try:
@@ -33,7 +33,8 @@ def quiz(driver: WebDriver, xpath: str):
         # Cookies pop-up closed
         page_cookies.quit_page_cookies(driver)
         # *** TASK ***
-        task_quiz(driver)
+
+        task_quiz(driver, style)
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
@@ -45,7 +46,7 @@ def quiz(driver: WebDriver, xpath: str):
             print('[QUIZ]', 'Done')
         elif validation_task.get_attribute("class") == TASK_NOT_DONE:
             print('[QUIZ]', 'Not Validated')
-            task_quiz(driver)
+            task_quiz(driver, style)
         else:
             print('[QUIZ]', 'ERROR')
 
@@ -54,7 +55,7 @@ def quiz(driver: WebDriver, xpath: str):
         pass
 
 
-def task_quiz(driver: WebDriver):
+def task_quiz(driver: WebDriver, style: int):
     wait = WebDriverWait(driver, 10)
     error_manager.reconnect_session(driver)
     page_cookies.quit_page_cookies(driver)
@@ -67,16 +68,19 @@ def task_quiz(driver: WebDriver):
         run_quiz.click()
 
         while True:
+            time_wait.page_load(driver)
             time.sleep(1)
             try:
                 driver.find_element(By.ID, "quizCompleteContainer")
                 break
             except:
-                click_case(driver)
-                time_wait.page_load(driver)
+                if style == 1:
+                    click_case_correct_option(driver)
+                else:
+                    click_case(driver)
 
 
-def click_case(driver: WebDriver):
+def click_case_correct_option(driver: WebDriver):
     button_index = 0
     winnable = 0
     wait = WebDriverWait(driver, 5)
@@ -84,15 +88,33 @@ def click_case(driver: WebDriver):
         time_wait.page_load(driver)
         button = wait.until(EC.visibility_of_element_located((By.ID, "rqAnswerOption" + str(button_index))))
         try:
-            if button.get_attribute("iscorrectoption") == "True":
+            if winnable == 5:
+                break
+            elif button.get_attribute("iscorrectoption") == "True":
+                print('[QUIZ]', 'Good')
                 button.click()
                 winnable += 1
             else:
-                button.click()
+                print('[QUIZ]', 'Not')
+                pass
 
             time.sleep(1)
             button_index += 1
-            if winnable == 5:
-                break
         except:
+            print('[QUIZ]', 'ERROR')
+            break
+
+
+def click_case(driver: WebDriver):
+    button_index = 0
+    wait = WebDriverWait(driver, 5)
+    while True:
+        time_wait.page_load(driver)
+        button = wait.until(EC.visibility_of_element_located((By.ID, "rqAnswerOption" + str(button_index))))
+        try:
+            button.click()
+            time.sleep(1)
+            button_index += 1
+        except:
+            print('[QUIZ]', 'ERROR')
             break

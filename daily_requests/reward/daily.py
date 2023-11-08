@@ -72,7 +72,12 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
         if pourcentage_quizz >= 50:
             # print(f"Validated : {', '.join(mots_quizz)}")
             print('[DAILY]', {i + 1}, f"Quiz : {pourcentage_quizz:.2f}%")
-            quiz.quiz(driver, define_task(i, driver))
+            if "pause-café" in mots_chaine:
+                print('[QUIZ]', 'Pause-café')
+                quiz.quiz(driver, define_task(i, driver), 1)
+            if "bonus" in mots_chaine:
+                print('[QUIZ]', 'bonus')
+                quiz.quiz(driver, define_task(i, driver), 1)
 
         elif pourcentage_ceci_cela > 50:
             # print(f"Validated : {', '.join(mots_ceci_cela_list)}")
@@ -96,7 +101,7 @@ def other_cards(driver: WebDriver):
         print('[CARDS]', 'Started')
         cards.more_cards(driver)
     except Exception as e:
-        print("Can't do more cards :", e)
+        print("[CARDS] No more cards :")
         pass
 
 

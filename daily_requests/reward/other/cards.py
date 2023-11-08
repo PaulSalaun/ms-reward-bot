@@ -42,19 +42,19 @@ def more_cards(driver: WebDriver):
                 card.click()
                 driver.switch_to.window(driver.window_handles[1])
                 time_wait.page_load(driver)
-                quiz.task_quiz(driver)
+                quiz.task_quiz(driver, 2)
             elif "quiz" in card.text.lower().split() and "bonus" in card.text.lower().split():
                 print('[CARD]', i, 'Quiz bonus')
                 card.click()
                 driver.switch_to.window(driver.window_handles[1])
                 time_wait.page_load(driver)
-                quiz.task_quiz(driver)
+                quiz.task_quiz(driver, 1)
             elif "quiz" in card.text.lower().split() and "pause-café" in card.text.lower().split():
-                print('[CARD]', i, 'Quiz bonus')
+                print('[CARD]', i, 'Quiz pause café')
                 card.click()
                 driver.switch_to.window(driver.window_handles[1])
                 time_wait.page_load(driver)
-                quiz.task_quiz(driver)
+                quiz.task_quiz(driver, 1)
             elif "cela?" in card.text.lower().split():
                 print('[CARD]', i, 'Ceci cela')
                 card.click()
