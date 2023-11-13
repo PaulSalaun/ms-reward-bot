@@ -43,7 +43,7 @@ def quiz(driver: WebDriver, xpath: str, style: int):
 
         validation_task = driver.find_element(By.XPATH, xpath + VALIDATED)
         if validation_task.get_attribute("class") == TASK_DONE:
-            print('[QUIZ]', 'Done')
+            print('[QUIZ]', 'Already done')
         elif validation_task.get_attribute("class") == TASK_NOT_DONE:
             print('[QUIZ]', 'Not Validated')
             task_quiz(driver, style)
@@ -63,9 +63,15 @@ def task_quiz(driver: WebDriver, style: int):
     time_wait.page_load(driver)
     try:
         driver.find_element(By.ID, "quizCompleteContainer")
+        pass
     except:
-        run_quiz = wait.until(EC.visibility_of_element_located((By.ID, "rqStartQuiz")))
-        run_quiz.click()
+        try:
+            driver.implicitly_wait(1)
+            run_quiz = driver.find_element(By.ID, "rqStartQuiz")
+            run_quiz.click()
+        except:
+            print('QUIZ', 'Already started')
+            pass
 
         while True:
             time_wait.page_load(driver)
@@ -78,43 +84,50 @@ def task_quiz(driver: WebDriver, style: int):
                     click_case_correct_option(driver)
                 else:
                     click_case(driver)
+    else:
+        print('[QUIZ]', 'KO')
 
 
 def click_case_correct_option(driver: WebDriver):
     button_index = 0
-    winnable = 0
     wait = WebDriverWait(driver, 5)
-    while True:
-        time_wait.page_load(driver)
-        button = wait.until(EC.visibility_of_element_located((By.ID, "rqAnswerOption" + str(button_index))))
-        try:
-            if winnable == 5:
-                break
-            elif button.get_attribute("iscorrectoption") == "True":
-                print('[QUIZ]', 'Good')
-                button.click()
-                winnable += 1
-            else:
-                print('[QUIZ]', 'Not')
-                pass
+    time_wait.page_load(driver)
 
-            time.sleep(1)
+    try:
+        while driver.find_element(By.ID, "bt_corOpCnt").text != "5":
+            print('[Quiz]', driver.find_element(By.ID, "bt_corOpCnt").text)
+            button = wait.until(EC.visibility_of_element_located((By.ID, "rqAnswerOption" + str(button_index))))
+            if button.get_attribute("iscorrectoption") == "True":
+                button.click()
+            if button_index == 8:
+                print('[Quiz]', 'Error find truth, reboot')
+                button_index = 0
+                driver.implicitly_wait(1)
+            else:
+                pass
+            driver.implicitly_wait(1)
             button_index += 1
-        except:
-            print('[QUIZ]', 'ERROR')
-            break
+    except:
+        pass
 
 
 def click_case(driver: WebDriver):
     button_index = 0
+    is_finished = True
     wait = WebDriverWait(driver, 5)
-    while True:
+    while is_finished:
+        print('[QUIZ]', button_index)
         time_wait.page_load(driver)
-        button = wait.until(EC.visibility_of_element_located((By.ID, "rqAnswerOption" + str(button_index))))
+        time.sleep(2)
+        if button_index == 4:
+            print('[QUIZ]', 'raz')
+            button_index = 0
         try:
+            driver.find_element(By.ID, "rqAnswerOption" + str(button_index))
+            button = wait.until(EC.visibility_of_element_located((By.ID, "rqAnswerOption" + str(button_index))))
             button.click()
-            time.sleep(1)
             button_index += 1
         except:
-            print('[QUIZ]', 'ERROR')
-            break
+            print('[QUIZ]', 'Break')
+            is_finished = False
+            driver.implicitly_wait(1)

@@ -1,5 +1,4 @@
-import pdb
-
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -8,9 +7,6 @@ from daily_requests.connexion import bingdisconnect
 from daily_requests.progress import reward_count
 from daily_requests.research import search
 from daily_requests.reward import daily
-from webdriver import proxy as prx
-
-import undetected_chromedriver as uc
 
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.51'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'
@@ -49,6 +45,7 @@ def pc_search(email: str, password: str):
     search.web_surfer(driver, 35, 1)
     bingdisconnect.disconnect(driver)
     print('[DISCONNECTED][PC SEARCH]', email)
+    driver.close()
     driver.quit()
 
 
@@ -60,4 +57,5 @@ def mobie_search(email: str, password: str):
     search.web_surfer(driver, 25)
     bingdisconnect.disconnect(driver)
     print('[DISCONNECTED][MOBILE SEARCH]', email)
+    driver.close()
     driver.quit()

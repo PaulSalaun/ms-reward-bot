@@ -78,6 +78,9 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
             if "bonus" in mots_chaine:
                 print('[QUIZ]', 'bonus')
                 quiz.quiz(driver, define_task(i, driver), 1)
+            else:
+                print('[QUIZ]', 'expresso')
+                quiz.quiz(driver, define_task(i, driver), 2)
 
         elif pourcentage_ceci_cela > 50:
             # print(f"Validated : {', '.join(mots_ceci_cela_list)}")
