@@ -40,12 +40,10 @@ def define_daily(driver: WebDriver, profil_index: int):
             assign_task(driver, profil_index, chaines_de_caracteres)
         except:
             print('[ERROR]', 'Never interactable')
-            pdb.set_trace()
             pass
 
     except Exception as e:
         print('[ERROR]', e)
-        pdb.set_trace()
         pass
 
 
@@ -53,7 +51,6 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
     i = 0
     for jeu in cdc:
         mots_chaine = jeu.split()
-        print(mots_chaine)
         # Recherche Quizz
         mots_quizz = [mot for mot in quiz_list if mot in mots_chaine]
         nb_mots_quizz = len(mots_quizz)

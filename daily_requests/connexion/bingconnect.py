@@ -47,7 +47,6 @@ def connect(driver: WebDriver, email: str, password: str, momentum: int):
 
         except NoSuchElementException:
             print('[STOP]', 'Error in connect')
-            pdb.set_trace()
 
         # Look for web error
         error_manager.error_pipe(driver)

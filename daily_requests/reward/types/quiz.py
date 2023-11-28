@@ -43,7 +43,7 @@ def quiz(driver: WebDriver, xpath: str, style: int):
 
         validation_task = driver.find_element(By.XPATH, xpath + VALIDATED)
         if validation_task.get_attribute("class") == TASK_DONE:
-            print('[QUIZ]', 'Already done')
+            print('[QUIZ]', 'Done')
         elif validation_task.get_attribute("class") == TASK_NOT_DONE:
             print('[QUIZ]', 'Not Validated')
             task_quiz(driver, style)
@@ -78,6 +78,7 @@ def task_quiz(driver: WebDriver, style: int):
             time.sleep(1)
             try:
                 driver.find_element(By.ID, "quizCompleteContainer")
+                print('Quiz complete')
                 break
             except:
                 if style == 1:

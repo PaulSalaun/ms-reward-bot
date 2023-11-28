@@ -33,7 +33,6 @@ def quit_reward_banner(driver: WebDriver):
                 print('[COOKIES]', 'Reward banner closed')
             else:
                 print('[ERROR COOKIES]', 'Banner always present')
-                pdb.set_trace()
     except NoSuchElementException:
         pass
 
