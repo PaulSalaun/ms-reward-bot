@@ -5,6 +5,8 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
 
+from utils import time_wait
+
 COOKIES_ID = "bnp_btn_accept"
 HEADER_COOKIES_ID = "wcpConsentBannerCtrl"
 HEADER_COOKIES_BUTTON = "#wcpConsentBannerCtrl > div._2j0fmugLb1FgYz6KPuB91w > button:nth-child(1)"
@@ -12,6 +14,7 @@ REWARD_BANNER_ID = "mbing-banner"
 
 
 def quit_page_cookies(driver: WebDriver):
+    time_wait.page_load(driver)
     time.sleep(1)
     try:
         driver.find_element(By.ID, COOKIES_ID).click()

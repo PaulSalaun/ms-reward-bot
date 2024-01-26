@@ -13,8 +13,8 @@ def main():
         profile_manager.set_streak(i, streak)
         print('[DATA]', 'Streak updated', profile_manager.get_streak(i))
 
-        initialize.pc_search(profile_manager.get_email(i), profile_manager.get_pass(i))
-        initialize.mobie_search(profile_manager.get_email(i), profile_manager.get_pass(i))
+        # initialize.pc_search(profile_manager.get_email(i), profile_manager.get_pass(i))
+        # initialize.mobie_search(profile_manager.get_email(i), profile_manager.get_pass(i))
 
         print('[END]', '------------- ', profile_manager.get_email(i), '--------------')
 

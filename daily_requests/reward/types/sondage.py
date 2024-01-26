@@ -27,7 +27,7 @@ def sondage_task(driver: WebDriver, xpath: str):
 
         # Disconnect error
         error_manager.reconnect_session(driver)
-
+        # driver.save_screenshot("screenshot.png")
         # Cookies pop-up closed
         page_cookies.quit_page_cookies(driver)
 
@@ -55,5 +55,5 @@ def sondage_task(driver: WebDriver, xpath: str):
             print('[SONDAGE]', 'ERROR')
 
     except Exception as e:
-        print("The error is: ", e)
+        print("The error is in SONDAGE: ", e)
         pass

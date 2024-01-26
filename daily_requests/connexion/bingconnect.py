@@ -31,21 +31,31 @@ def connect(driver: WebDriver, email: str, password: str, momentum: int):
             print('[WEB]', email)
             email_connect(driver, email, password)
 
-            if driver.find_element(By.ID, 'iLandingViewAction'):
+            time.sleep(2)
+            # if driver.find_element(By.ID, 'iLandingViewAction').is_displayed():
+            try:
                 security = wait.until(EC.visibility_of_element_located((By.ID, 'iLandingViewAction')))
                 security.click()
                 print('[CONNECT]', 'Security popup')
+                time_wait.page_load(driver)
+            except:
+                pass
 
-            time_wait.page_load(driver)
+            # if driver.find_element(By.ID, 'idBtn_Back').is_displayed():
 
-            if driver.find_element(By.ID, 'idBtn_Back'):
-                stayco_button = wait.until(EC.visibility_of_element_located((By.ID, 'idBtn_Back')))
-                stayco_button.click()
+            driver.find_element(By.ID, 'idBtn_Back').click()
+            try:
+                time.sleep(2)
+                driver.save_screenshot("screenshot2.png")
+                driver.find_element(By.ID, 'idBtn_Back').click()
                 print('[CONNECT]', 'Stay connected popup')
-
+            except:
+                pass
+            driver.save_screenshot("screenshot2.png")
             time_wait.page_load(driver)
 
         except NoSuchElementException:
+            driver.save_screenshot("screens/error/connect.png")
             print('[STOP]', 'Error in connect')
 
         # Look for web error
