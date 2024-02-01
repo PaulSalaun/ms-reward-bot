@@ -1,12 +1,10 @@
-import json
-import time
 import pdb
+import time
 
-from selenium.common import NoSuchElementException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from daily_requests.errors import error_manager
 from utils import time_wait
@@ -18,7 +16,7 @@ CONNECT_LINK = "https://login.live.com/"
 
 # 1: DAILY / 2: PC SEARCH / 3: MOBILE SEARCH
 def connect(driver: WebDriver, email: str, password: str, momentum: int):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 5)
 
     if momentum == 1:
         driver.get('https://rewards.microsoft.com/dashboard')
@@ -30,9 +28,6 @@ def connect(driver: WebDriver, email: str, password: str, momentum: int):
         try:
             print('[WEB]', email)
             email_connect(driver, email, password)
-
-            time.sleep(2)
-            # if driver.find_element(By.ID, 'iLandingViewAction').is_displayed():
             try:
                 security = wait.until(EC.visibility_of_element_located((By.ID, 'iLandingViewAction')))
                 security.click()
@@ -41,22 +36,23 @@ def connect(driver: WebDriver, email: str, password: str, momentum: int):
             except:
                 pass
 
-            # if driver.find_element(By.ID, 'idBtn_Back').is_displayed():
-
-            driver.find_element(By.ID, 'idBtn_Back').click()
             try:
-                time.sleep(2)
-                driver.save_screenshot("screenshot2.png")
-                driver.find_element(By.ID, 'idBtn_Back').click()
+                popup = wait.until(EC.visibility_of_element_located((By.ID, 'idBtn_Back')))
+                popup.click()
                 print('[CONNECT]', 'Stay connected popup')
             except:
                 pass
-            driver.save_screenshot("screenshot2.png")
+            try:
+                popup = wait.until(EC.visibility_of_element_located((By.ID, 'declineButton')))
+                popup.click()
+                print('[CONNECT]', 'Stay connected popup')
+            except:
+                pass
             time_wait.page_load(driver)
 
-        except NoSuchElementException:
-            driver.save_screenshot("screens/error/connect.png")
-            print('[STOP]', 'Error in connect')
+        except Exception as e:
+            # driver.save_screenshot("connect.png")
+            print('[STOP]', 'Error in connect : ', e)
 
         # Look for web error
         error_manager.error_pipe(driver)
@@ -100,6 +96,7 @@ def email_connect(driver: WebDriver, email: str, password: str):
     next_button.click()
 
     # pdb.set_trace()
+    time.sleep(2)
 
     pass_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0118')))
     pass_input.send_keys(password)

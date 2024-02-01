@@ -1,10 +1,9 @@
-import pdb
 import time
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from daily_requests.reward.types import quiz, cecicela
 from utils import time_wait
@@ -26,13 +25,12 @@ NOT_EDGED = "//*[@id='legalTextBox']/div/div/div[3]/a/span/ng-transclude"
 def more_cards(driver: WebDriver):
     wait = WebDriverWait(driver, 10)
     i = 1
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, CARD_CSS.format(i))))
     while True:
-        time.sleep(1)
+        time.sleep(2)
         time_wait.page_load(driver)
         rebooter(driver)
-        time_wait.page_load(driver)
         card = driver.find_element(By.CSS_SELECTOR, CARD_CSS.format(i))
+        # card = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, CARD_CSS.format(i))))
         try:
             # If done -> pass
             driver.find_element(By.CSS_SELECTOR, NOT_VALIDATED_CSS.format(i))
@@ -67,32 +65,32 @@ def more_cards(driver: WebDriver):
                 wait.until(EC.visibility_of_element_located((By.XPATH, POPUP_CLOSE)))
                 driver.find_element(By.XPATH, LINK_ACTUALITE).click()
                 driver.switch_to.window(driver.window_handles[1])
-                time_wait.page_load(driver)
             elif "suivez" in card.text.lower().split() and "visite" in card.text.lower().split():
                 print('[CARD]', i, 'Visite guidée')
                 card.click()
                 wait.until(EC.visibility_of_element_located((By.ID, "welcome-tour-slide")))
                 driver.find_element(By.XPATH, "//*[@id='modal-host']/div[2]/button").click()
                 driver.switch_to.window(driver.window_handles[1])
-                time_wait.page_load(driver)
             elif "microsoft" in card.text.lower().split() and "edge" in card.text.lower().split():
                 print('[CARD]', i, 'Not Edge')
                 card.click()
                 wait.until(EC.visibility_of_element_located((By.XPATH, NOT_EDGED)))
                 driver.find_element(By.XPATH, NOT_EDGED).click()
                 driver.switch_to.window(driver.window_handles[1])
-                time_wait.page_load(driver)
             else:
                 print('[CARD]', i, 'Random')
                 card.click()
-                try:
-                    driver.switch_to.window(driver.window_handles[1])
-                except:
-                    driver.get("https://rewards.bing.com/")
-            time_wait.page_load(driver)
-            driver.close()
+            # try:
+            #     driver.switch_to.window(driver.window_handles[1])
+            #     driver.close()
+            #     driver.switch_to.window(driver.window_handles[0])
+            # except:
+            #     pass
             driver.switch_to.window(driver.window_handles[0])
+            time_wait.page_load(driver)
         except:
+            time.sleep(0.5)
+            print('[CARD]', i)
             pass
         time.sleep(0.5)
         i += 1
@@ -104,9 +102,12 @@ def close_spotify_popup(driver: WebDriver):
 
 
 def rebooter(driver: WebDriver):
-    notyou = driver.find_element(By.TAG_NAME, "body")
-    if "Ce n’est pas vous, c’est nous." in notyou.text:
-        driver.refresh()
-        time_wait.page_load(driver)
-    else:
+    try:
+        notyou = driver.find_element(By.TAG_NAME, "body")
+        if "Ce n’est pas vous, c’est nous." in notyou.text:
+            driver.refresh()
+            time_wait.page_load(driver)
+        else:
+            pass
+    except:
         pass

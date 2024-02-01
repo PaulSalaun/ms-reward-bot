@@ -116,13 +116,16 @@ def define_task(i: int, driver: WebDriver):
 
 
 def generate_cdc(driver: WebDriver):
-    chaines_de_caracteres = []
-    driver.refresh()
-    time_wait.page_load(driver)
-    if driver.find_element(By.XPATH, JOUR1):
-        chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR1).text)
-        chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR2).text)
-        chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR3).text)
-    else:
-        print('NO CSS')
-    return chaines_de_caracteres
+    try:
+        chaines_de_caracteres = []
+        driver.refresh()
+        time_wait.page_load(driver)
+        if driver.find_element(By.XPATH, JOUR1):
+            chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR1).text)
+            chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR2).text)
+            chaines_de_caracteres.append(driver.find_element(By.XPATH, JOUR3).text)
+        else:
+            print('NO CSS')
+        return chaines_de_caracteres
+    except Exception as e:
+        print("[CONNECT]", "Error while connecting ", e)

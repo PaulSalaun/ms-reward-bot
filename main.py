@@ -4,7 +4,7 @@ from profils import profile_manager
 
 def main():
     for i in range(0, profile_manager.get_len()):
-        print('[START]', '------------- ',  profile_manager.get_email(i), '--------------')
+        print('[START]', '------------- ', profile_manager.get_email(i), '--------------')
 
         rewards, streak = initialize.daily_tasks(i, profile_manager.get_email(i), profile_manager.get_pass(i))
 
