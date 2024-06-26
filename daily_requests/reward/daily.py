@@ -1,11 +1,11 @@
-import pdb
 import time
 
+from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import ElementNotInteractableException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
-from profils import profile_manager
 from daily_requests.connexion import page_cookies
 from daily_requests.errors import error_manager
 from daily_requests.reward.other import cards
@@ -22,10 +22,19 @@ ceci_cela_list = ["correctement", "Ceci", "cela?", "jusqu’à", "question,", "5
 
 
 def define_daily(driver: WebDriver, profil_index: int):
-    # Look for cookies
+    wait = WebDriverWait(driver, 5)
     page_cookies.header_cookies(driver)
     time_wait.page_load(driver)
-    time.sleep(1)
+
+    try:
+        popup = wait.until(EC.visibility_of_element_located((By.ID, 'reward_pivot_earn')))
+        popup.click()
+        time.sleep(1)
+        if popup.is_displayed():
+            popup.click()
+        print('[CONNECT]', 'Streak popup')
+    except:
+        pass
 
     chaines_de_caracteres = generate_cdc(driver)
 
@@ -128,4 +137,5 @@ def generate_cdc(driver: WebDriver):
             print('NO CSS')
         return chaines_de_caracteres
     except Exception as e:
+        driver.save_screenshot("connect.png")
         print("[CONNECT]", "Error while connecting ", e)

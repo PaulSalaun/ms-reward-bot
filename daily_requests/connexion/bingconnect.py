@@ -28,6 +28,7 @@ def connect(driver: WebDriver, email: str, password: str, momentum: int):
         try:
             print('[WEB]', email)
             email_connect(driver, email, password)
+            print('[CONNECT]', 'Connected successfully', email)
             try:
                 security = wait.until(EC.visibility_of_element_located((By.ID, 'iLandingViewAction')))
                 security.click()
@@ -51,7 +52,6 @@ def connect(driver: WebDriver, email: str, password: str, momentum: int):
             time_wait.page_load(driver)
 
         except Exception as e:
-            # driver.save_screenshot("connect.png")
             print('[STOP]', 'Error in connect : ', e)
 
         # Look for web error

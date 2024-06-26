@@ -1,3 +1,5 @@
+from urllib.request import urlretrieve
+
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -19,8 +21,10 @@ CHROMEDRIVER_PATH = './chromedriver.exe'
 def daily_tasks(profil_index: int, email: str, password: str) -> tuple[str, str]:
     optionshadow = Options()
     optionshadow.add_argument("--headless")
+    # driver = uc.Chrome(optionshadow, browser_executable_path="/usr/bin/chromium", driver_executable_path="./webdriver/chromedriver")
     driver = uc.Chrome(optionshadow)
-    driver.maximize_window()
+    print("Current session is {}".format(driver.session_id))
+    # driver.maximize_window()
     bingconnect.connect(driver, email, password, 1)
     daily.define_daily(driver, profil_index)
     daily.other_cards(driver)
@@ -39,8 +43,9 @@ options.add_argument("--disable-gpu")
 
 # DO PC RESEARCH
 def pc_search(email: str, password: str):
-    options.add_argument("user-agent=" + PC_USER_AGENT)
-    driver = webdriver.Chrome(options=options)
+    optionshadow = Options()
+    optionshadow.add_argument("--headless")
+    driver = uc.Chrome(optionshadow)
     bingconnect.connect(driver, email, password, 2)
     search.web_surfer(driver, 35, 1)
     bingdisconnect.disconnect(driver)
