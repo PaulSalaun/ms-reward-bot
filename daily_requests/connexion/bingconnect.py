@@ -16,7 +16,7 @@ CONNECT_LINK = "https://login.live.com/"
 
 # 1: DAILY / 2: PC SEARCH / 3: MOBILE SEARCH
 def connect(driver: WebDriver, email: str, password: str, momentum: int):
-    wait = WebDriverWait(driver, 5)
+    wait = WebDriverWait(driver, 2)
 
     if momentum == 1:
         driver.get('https://rewards.microsoft.com/dashboard')
@@ -103,3 +103,8 @@ def email_connect(driver: WebDriver, email: str, password: str):
     end_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
     end_button.click()
     time.sleep(0.33)
+
+
+def login(driver: WebDriver, email: str, password: str):
+    wait = WebDriverWait(driver, 10)
+

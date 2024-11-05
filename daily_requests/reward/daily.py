@@ -16,6 +16,7 @@ JOUR1 = '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[1]'
 JOUR2 = '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[2]'
 JOUR3 = '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[3]'
 
+
 quiz_list = ["Quiz", "connaissez", "réponse", "expresso", "bonus", "pause-café"]
 sondage_list = ["Sondage", "Choisissez", "comparez", "préférence"]
 ceci_cela_list = ["correctement", "Ceci", "cela?", "jusqu’à", "question,", "50"]
@@ -103,6 +104,7 @@ def assign_task(driver: WebDriver, profil_index: int, cdc: list):
             print('[DAILY]', {i + 1}, 'Random')
             default.random_task(driver, define_task(i, driver))
 
+        time.sleep(1)
         i += 1
 
 

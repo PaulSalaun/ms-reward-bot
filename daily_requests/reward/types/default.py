@@ -38,5 +38,5 @@ def random_task(driver: WebDriver, xpath: str):
             print('[RANDOM]', 'ERROR')
 
     except Exception as e:
-        print("The error is: ", e)
+        print("[RANDOM]", "Error: ", e)
         pass
