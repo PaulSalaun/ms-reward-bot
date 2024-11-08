@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-import main
+import lambda_function
 from daily_requests.reward.other.search_dict import SearchEnum
 from daily_requests.reward.types import quiz, cecicela
 from utils import time_wait
