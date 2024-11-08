@@ -1,4 +1,5 @@
 import json
+import os
 import time
 
 from discord_webhook import DiscordWebhook, DiscordEmbed
@@ -22,13 +23,23 @@ def lambda_handler(event, context):
         content="** Resultat du <t:" + date + ":D> ** ")
 
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument('--single-process')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--window-size=1280x1696')
+    chrome_options.add_argument('--user-data-dir=/tmp/user-data')
+    chrome_options.add_argument('--hide-scrollbars')
+    chrome_options.add_argument('--enable-logging')
+    chrome_options.add_argument('--log-level=0')
+    chrome_options.add_argument('--v=99')
+    chrome_options.add_argument('--single-process')
+    chrome_options.add_argument('--data-path=/tmp/data-path')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--homedir=/tmp')
+    chrome_options.add_argument('--disk-cache-dir=/tmp/cache-dir')
+    chrome_options.binary_location = os.getcwd() + "/bin/headless-chromium"
 
-    service = ChromeService()
+    service = ChromeService(executable_path=os.getcwd() + '/bin/chromedriver')
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     for i in range(0, profile_manager.get_len()):
