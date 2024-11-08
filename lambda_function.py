@@ -5,7 +5,6 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 
 from daily_requests.connexion import bingconnect, bingdisconnect
 from daily_requests.progress import reward_count
@@ -27,7 +26,7 @@ def lambda_handler(event, context):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    service = ChromeService(ChromeDriverManager().install())
+    service = ChromeService()
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     for i in range(0, profile_manager.get_len()):
