@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from random import randint
 from tempfile import mkdtemp
@@ -14,38 +15,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-profiles = [
-    {
-        "email": "helene.barrista@outlook.com",
-        "password": "gingerrhumolive76",
-    },
-    {
-        "email": "lionel.potofeu@hotmail.com",
-        "password": "lioneldesusa69000ivoire",
-    },
-    {
-        "email": "killian.grenadine@outlook.fr",
-        "password": "killianMonaco7834!",
-    },
-    {
-        "email": "leon.moccacino@outlook.fr",
-        "password": "leon!976mocca{}duff",
-    }
-]
-
 
 class ProfileManager:
-    def __init__(self, profiles):
-        self.profiles = profiles
-        self.user_email = None
-        self.user_password = None
-
-    def set_profile(self, index):
-        if 0 <= index < len(self.profiles):
-            self.user_email = self.profiles[index]["email"]
-            self.user_password = self.profiles[index]["password"]
-        else:
-            raise IndexError("Index out of range")
+    def __init__(self):
+        self.user_email = "lionel.potofeu@hotmail.com"
+        self.user_password = "lioneldesusa69000ivoire"
 
     def get_email(self):
         return self.user_email
@@ -53,6 +27,8 @@ class ProfileManager:
     def get_password(self):
         return self.user_password
 
+
+SCREENSHOT_PATH = 'screenshot.png'
 
 LINK = "https://www.bing.com/"
 CONNECT_LINK = "https://login.live.com/"
@@ -262,7 +238,7 @@ sondage_list = ["Sondage", "Choisissez", "comparez", "préférence"]
 ceci_cela_list = ["correctement", "Ceci", "cela?", "jusqu’à", "question,", "50"]
 
 
-def define_daily(driver: WebDriver, profil_index: int):
+def define_daily(driver: WebDriver):
     wait = WebDriverWait(driver, 5)
     header_cookies(driver)
     page_load(driver)
@@ -280,7 +256,7 @@ def define_daily(driver: WebDriver, profil_index: int):
     chaines_de_caracteres = generate_cdc(driver)
 
     try:
-        assign_task(driver, profil_index, chaines_de_caracteres)
+        assign_task(driver, chaines_de_caracteres)
 
     except ElementNotInteractableException:
         print('[ERROR]', 'Element not interactable')
@@ -288,7 +264,7 @@ def define_daily(driver: WebDriver, profil_index: int):
         reconnect_session(driver)
         quit_page_cookies(driver)
         try:
-            assign_task(driver, profil_index, chaines_de_caracteres)
+            assign_task(driver, chaines_de_caracteres)
         except:
             print('[ERROR]', 'Never interactable')
             pass
@@ -298,7 +274,7 @@ def define_daily(driver: WebDriver, profil_index: int):
         pass
 
 
-def assign_task(driver: WebDriver, profil_index: int, cdc: list):
+def assign_task(driver: WebDriver, cdc: list):
     i = 0
     for jeu in cdc:
         mots_chaine = jeu.split()
@@ -644,7 +620,6 @@ def sondage_task(driver: WebDriver, xpath: str):
         pass
 
 
-# Todo -> Card NOT VALIDATED = action : None
 # If switch onglet -> Task / Popup
 def more_cards(driver: WebDriver):
     wait = WebDriverWait(driver, 10)
@@ -750,12 +725,32 @@ def rebooter(driver: WebDriver):
 def rechercheTask(driver: WebDriver, value: str):
     wait = WebDriverWait(driver, 10)
     page_load(driver)
-    manager = ProfileManager(profiles)
+    manager = ProfileManager()
 
-    connect = driver.find_element(By.ID, "id_l")
+    recherche_connect = driver.find_element(By.ID, "id_l")
+
+    # TODO REMOVE
+    cookies = driver.get_cookies()
+
+    # Check for MSPAuth and MSPProf values
+    mspauth_value = None
+    mspprof_value = None
+
+    for cookie in cookies:
+        print(cookie.get("name"), cookie.get("value"))
+        # if cookie['name'] == 'MSPAuth':
+        #     mspauth_value = cookie['value']
+        #     print('[Recherche]', mspauth_value)
+        # elif cookie['name'] == 'MSPProf':
+        #     mspprof_value = cookie['value']
+        #     print('[Recherche]', mspprof_value)
+        # else:
+        #     print("[Recherche]", "NO CONNECTED")
+
+
     # No connected ->
-    if connect.text.lower().__contains__("connexion"):
-        connect.click()
+    if recherche_connect and "connexion" in recherche_connect.text.lower():
+        recherche_connect.click()
         time.sleep(1)
 
         try:
@@ -797,7 +792,7 @@ def rechercheTask(driver: WebDriver, value: str):
 def recherche(driver: WebDriver, value: str):
     try:
         element = driver.find_element(By.ID, 'sb_form_q')
-        element.click()
+        # element.click()
         element.send_keys(value)
         time.sleep(1)
         element.send_keys(Keys.RETURN)
@@ -808,6 +803,7 @@ def recherche(driver: WebDriver, value: str):
             print('[Recherche]', "Cookies closed")
         else:
             pass
+        driver.save_screenshot("recherche-task-done.png")
         time.sleep(2)
     except:
         print('[Recherche]', "Break")
@@ -823,11 +819,11 @@ class SearchEnum:
         "faites vos achats plus vite": "casque sony wh-1000xm4 prix",  # y
         "traduisez tout !": "traduction anglais étincellant",
         "rechercher paroles de chanson": "parole chanson macarena",  # y
-        "et si nous regardions ce film une nouvelle fois ?": "",
+        "et si nous regardions ce film une nouvelle fois ?": "Cars 2",
         "vous avez des symptômes?": "symptome grippe",  # n
         "apprendre à cuisiner recettes": "recette de risotto",  # n
         "maisons près de chez vous!": "laforet immobilier",  # y
-        "trouvez des emplacements pour rester!": "",
+        "trouvez des emplacements pour rester!": "Hostel Copenhague",
         "trop fatigué pour cuisiner ce soir?": "buffalo grill merignac",  # y
         "conversion rapide de monnaie": "conversion couronne suedoise euro",  # y
         "vérifier la météo": "quel temps fera t il demain",
@@ -842,74 +838,77 @@ def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
     print(context)
 
-    date = time.time().__str__().split('.')[0]
-    webhook = DiscordWebhook(
-        url="https://discord.com/api/webhooks/1255453326481424405/M98g63d5MSOLgVMbzil0hlJFi3Zj2RNyY_cqbF-YLeIkR9pHFKT3SvaTpGCZaMjyBzMP",
-        content="** Resultat du <t:" + date + ":D> ** ")
+    manager = ProfileManager()
+    email = manager.get_email()
+    password = manager.get_password()
+
+    discord = os.getenv("DISCORD_WEBHOOK")
 
     chrome_options = ChromeOptions()
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-dev-tools")
-    chrome_options.add_argument("--no-zygote")
-    chrome_options.add_argument("--single-process")
-    chrome_options.add_argument(f"--user-data-dir={mkdtemp()}")
-    chrome_options.add_argument(f"--data-path={mkdtemp()}")
-    chrome_options.add_argument(f"--disk- cache-dir={mkdtemp()}")
-    chrome_options.add_argument("--remote-debugging-pipe")
-    chrome_options.add_argument("--verbose")
-    chrome_options.add_argument("--log-path=/tmp")
-    chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
+    chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--disable-gpu")
+    # chrome_options.add_argument("--disable-dev-tools")
+    # chrome_options.add_argument("--no-zygote")
+    # # chrome_options.add_argument("--single-process")
+    # chrome_options.add_argument(f"--user-data-dir={mkdtemp()}")
+    # chrome_options.add_argument(f"--data-path={mkdtemp()}")
+    # chrome_options.add_argument(f"--disk- cache-dir={mkdtemp()}")
+    # chrome_options.add_argument("--remote-debugging-pipe")
+    # chrome_options.add_argument("--verbose")
+    # chrome_options.add_argument("--log-path=/tmp")
+    # chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
 
     service = Service(
-        executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
-        service_log_path="/tmp/chromedriver.log"
+        # executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
+        # service_log_path="/tmp/chromedriver.log"
     )
 
-    for i in range(0, len(profiles)):
-        driver = webdriver.Chrome(
-            service=service,
-            options=chrome_options
+    driver = webdriver.Chrome(
+        service=service,
+        options=chrome_options
+    )
+
+    print('[START]', '------------- ', email, '--------------')
+    print("Current session is {}".format(driver.session_id))
+
+    # Connect user from dict
+    connect(driver, email, password)
+
+    # Run daily tasks to obtain the streak
+    define_daily(driver)
+    # Run cards to obtain more rewards
+    other_cards(driver)
+
+    # Get the user's rewards
+    reward = get_points(driver)
+
+    # Disconnect user
+    disconnect(driver)
+    print('[DISCONNECTED][DAILY]', email)
+    driver.close()
+    driver.quit()
+
+    print('[DATA]', 'Reward updated', reward)
+    print('[END]', '------------- ', email, '--------------')
+
+    if discord:
+        webhook = DiscordWebhook(
+            url=discord
         )
-
-        manager = ProfileManager(profiles)
-        manager.set_profile(i)
-        email = profiles[i]['email']
-        password = profiles[i]["password"]
-
-        print('[START]', '------------- ', email, '--------------')
-        print("Current session is {}".format(driver.session_id))
-
-        # Connect user from dict
-        connect(driver, email, password)
-
-        # Run daily tasks to obtain the streak
-        define_daily(driver, i)
-        # Run cards to obtain more rewards
-        other_cards(driver)
-
-        # Get the user's rewards
-        reward = get_points(driver)
-
-        # Disconnect user
-        disconnect(driver)
-        print('[DISCONNECTED][DAILY]', email)
-        driver.close()
-        driver.quit()
-
-        print('[DATA]', 'Reward updated', reward)
-        print('[END]', '------------- ', email, '--------------')
-
         embed = DiscordEmbed(title=email,
                              description="Points Reward : " + reward, color="03b2f8")
         webhook.add_embed(embed)
-    webhook.execute()
+        webhook.execute()
+
+    with open(SCREENSHOT_PATH, 'rb') as screenshot_file:
+        screenshot_data = screenshot_file.read()
 
     return {
         "statusCode": 200,
         "body": json.dumps(event),
+        "screenshot": screenshot_data
     }
 
 

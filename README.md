@@ -1,12 +1,28 @@
- # How to install bot :
-  1. Clone repository in prefered folder using :
->`git clone https://github.com/PaulSalaun/ms-reward-bot.git`
-  2. Open project in your IDE
-  3. Install and configure Python 3.10 interpreter from https://www.python.org/downloads/release/python-31011/
-  4. Install all dependencies : 
->```pip install -r requirements.txt```
-  5. run main.py
+ # How to use bot with AWS :
+ ###### Based on [Shilleh tutorial](https://towardsdev.com/easily-use-selenium-with-aws-lambda-2cc49ca43b93)
 
-    Bot Selenium to complete ms reward daily quests
-    Paul SALAÜN
+---
 
+#### This bot is a personal project for web scraping; I am not responsible for its use or results. Using bots for task automation is against Microsoft Reward rules and may lead to account bans. 
+
+---
+Before start deploying the image on Docker then AWS, take your AWS accound id (AMAZON ID) and define the wanted server region (REGION). Then replace values in following command lines.
+
+1. Build the Docker Image :
+    ```console
+    docker build -t selenium-chrome-driver .
+    ```
+2. Tag the Docker Image :
+    ```console
+    docker tag selenium-chrome-driver (AMAZON ID).dkr.ecr.(REGION).amazonaws.com/docker-images:v1.0.0
+    ```
+3. Push the Docker Image to AWS ECR
+    ```console
+    aws ecr get-login-password --region (REGION) | docker login --username AWS --password-stdin (AMAZON ID).dkr.ecr.(REGION).amazonaws.com/docker-images
+    ```
+    ```console
+    docker push (AMAZON ID).dkr.ecr.(REGION).amazonaws.com/docker-images:v1.0.0
+    ```
+
+
+*Bot Selenium to complete ms reward daily quests by Paul SALAÜN*

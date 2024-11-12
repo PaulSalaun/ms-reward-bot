@@ -11,8 +11,11 @@ RUN ./chrome-installer.sh
 RUN rm ./chrome-installer.sh
 # Install selenium
 RUN pip install selenium
-RUN pip install undetected_chromedriver
+# For utils
 RUN pip install setuptools
+# To r/w in S3
+RUN pip install boto3
+# If necessary: discord webhook to obtain notifications
 RUN pip install discord_webhook
 
 # Copy the main application code
