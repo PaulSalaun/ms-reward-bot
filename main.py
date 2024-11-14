@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 
 from discord_webhook import DiscordWebhook, DiscordEmbed
 from selenium import webdriver
-from selenium.common import ElementNotInteractableException, NoSuchElementException
+from selenium.common import ElementNotInteractableException, NoSuchElementException, InvalidSessionIdException
 from selenium.webdriver import Keys
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.service import Service
@@ -18,8 +18,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class ProfileManager:
     def __init__(self):
-        self.user_email = "lionel.potofeu@hotmail.com"
-        self.user_password = "lioneldesusa69000ivoire"
+        self.user_email = os.getenv("PROFILE_EMAIL")
+        self.user_password = os.getenv("PROFILE_PASSWORD")
 
     def get_email(self):
         return self.user_email
@@ -28,13 +28,12 @@ class ProfileManager:
         return self.user_password
 
 
-SCREENSHOT_PATH = 'screenshot.png'
-
 LINK = "https://www.bing.com/"
 CONNECT_LINK = "https://login.live.com/"
 
+
 def page_load(driver: WebDriver):
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 1)
     try:
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
     except:
@@ -42,8 +41,15 @@ def page_load(driver: WebDriver):
 
 
 def get_points(driver: WebDriver) -> str:
-    wait = WebDriverWait(driver, 10)
-    driver.get('https://rewards.microsoft.com/dashboard')
+    wait = WebDriverWait(driver, 1)
+    try:
+        driver.get('https://rewards.microsoft.com/dashboard')
+    except InvalidSessionIdException:
+        print("[Rewards] Invalid session id")
+        driver.quit()
+        driver = getDriver()
+        driver.get('https://rewards.microsoft.com/dashboard')
+
     # Look for web error
     error_pipe(driver)
     # Cookies pop-up closed
@@ -59,7 +65,7 @@ def get_points(driver: WebDriver) -> str:
 
 # 1: DAILY / 2: PC SEARCH / 3: MOBILE SEARCH
 def connect(driver: WebDriver, email: str, password: str):
-    wait = WebDriverWait(driver, 2)
+    wait = WebDriverWait(driver, 1)
 
     driver.get('https://rewards.microsoft.com/dashboard')
     time.sleep(1)
@@ -101,7 +107,7 @@ def connect(driver: WebDriver, email: str, password: str):
 
 
 def email_connect(driver: WebDriver, email: str, password: str):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
 
     email_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0116')))
     email_input.send_keys(email)
@@ -123,7 +129,7 @@ CLEAR_DATA_LINK = "chrome://settings/clearBrowserData"
 
 
 def disconnect(driver: WebDriver):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
     driver.get(DECO_LINK)
     time.sleep(1)
     try:
@@ -239,7 +245,7 @@ ceci_cela_list = ["correctement", "Ceci", "cela?", "jusqu’à", "question,", "5
 
 
 def define_daily(driver: WebDriver):
-    wait = WebDriverWait(driver, 5)
+    wait = WebDriverWait(driver, 1)
     header_cookies(driver)
     page_load(driver)
 
@@ -329,7 +335,7 @@ def other_cards(driver: WebDriver):
         print('[CARDS]', 'Started')
         more_cards(driver)
     except Exception as e:
-        print("[CARDS] No more cards")
+        print("[CARDS]", "No more cards")
         pass
 
 
@@ -360,7 +366,7 @@ def generate_cdc(driver: WebDriver):
 
 
 def random_task(driver: WebDriver, xpath: str):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
     time.sleep(1)
 
     try:
@@ -389,7 +395,7 @@ def random_task(driver: WebDriver, xpath: str):
 
 
 def quiz(driver: WebDriver, xpath: str, style: int):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
 
     try:
         clicker = wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
@@ -426,7 +432,7 @@ def quiz(driver: WebDriver, xpath: str, style: int):
 
 
 def task_quiz(driver: WebDriver, style: int):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
     reconnect_session(driver)
     quit_page_cookies(driver)
 
@@ -461,7 +467,7 @@ def task_quiz(driver: WebDriver, style: int):
 
 def click_case_correct_option(driver: WebDriver):
     button_index = 0
-    wait = WebDriverWait(driver, 5)
+    wait = WebDriverWait(driver, 1)
     page_load(driver)
 
     try:
@@ -485,7 +491,7 @@ def click_case_correct_option(driver: WebDriver):
 def click_case(driver: WebDriver):
     button_index = 0
     is_finished = True
-    wait = WebDriverWait(driver, 5)
+    wait = WebDriverWait(driver, 1)
     while is_finished:
         print('[QUIZ]', button_index)
         page_load(driver)
@@ -505,7 +511,7 @@ def click_case(driver: WebDriver):
 
 
 def ceci_cela(driver: WebDriver, xpath: str):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
     time.sleep(1)
 
     try:
@@ -543,7 +549,7 @@ def ceci_cela(driver: WebDriver, xpath: str):
 
 
 def task_cecicela(driver: WebDriver):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
     page_load(driver)
     reconnect_session(driver)
     quit_page_cookies(driver)
@@ -580,7 +586,7 @@ def define_choice():
 
 
 def sondage_task(driver: WebDriver, xpath: str):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
     time.sleep(1)
     try:
         clicker = wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
@@ -622,7 +628,7 @@ def sondage_task(driver: WebDriver, xpath: str):
 
 # If switch onglet -> Task / Popup
 def more_cards(driver: WebDriver):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 1)
     i = 1
     while True:
         time.sleep(2)
@@ -664,7 +670,7 @@ def more_cards(driver: WebDriver):
                 for key in SearchEnum.search_enum_dict:
                     if key in card.text.lower():
                         answer = SearchEnum.search_enum_dict[key]
-                print('[Recherche]', i, answer)
+                print('[Recherche]', i, "-", answer)
                 card.click()
                 driver.switch_to.window(driver.window_handles[1])
                 if answer != "":
@@ -723,70 +729,13 @@ def rebooter(driver: WebDriver):
 
 
 def rechercheTask(driver: WebDriver, value: str):
-    wait = WebDriverWait(driver, 10)
     page_load(driver)
-    manager = ProfileManager()
 
-    recherche_connect = driver.find_element(By.ID, "id_l")
+    driver.get(
+        "https://login.live.com/login.srf?wa=wsignin1.0&rpsnv=165&id=264960&wreply=https%3a%2f%2fwww.bing.com%2fsecure%2fPassport.aspx%3fedge_suppress_profile_switch%3d1%26requrl%3dhttps%253a%252f%252fwww.bing.com%252f%253fform%253dML2PCR%2526OCID%253dML2PCR%2526PUBL%253dRewardsDO%2526CREA%253dML2PCR%2526rwAutoFlyout%253dexb%2526wlexpsignin%253d1%26sig%3d1933D72C778565402BFDC21B769A641D%26nopa%3d2&wp=MBI_SSL&lc=1036&CSRFToken=2b834cc7-6ced-499c-bb0e-ba1be85b6095&cobrandid=c333cba8-c15c-4458-b082-7c8ce81bee85&aadredir=1&nopa=2")
+    page_load(driver)
 
-    # TODO REMOVE
-    cookies = driver.get_cookies()
-
-    # Check for MSPAuth and MSPProf values
-    mspauth_value = None
-    mspprof_value = None
-
-    for cookie in cookies:
-        print(cookie.get("name"), cookie.get("value"))
-        # if cookie['name'] == 'MSPAuth':
-        #     mspauth_value = cookie['value']
-        #     print('[Recherche]', mspauth_value)
-        # elif cookie['name'] == 'MSPProf':
-        #     mspprof_value = cookie['value']
-        #     print('[Recherche]', mspprof_value)
-        # else:
-        #     print("[Recherche]", "NO CONNECTED")
-
-
-    # No connected ->
-    if recherche_connect and "connexion" in recherche_connect.text.lower():
-        recherche_connect.click()
-        time.sleep(1)
-
-        try:
-            print('[Recherche]', "Non connecté", manager.get_email())
-            driver.find_element(By.ID, "id_text_signin").click()
-            time.sleep(2)
-
-            email_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0116')))
-            email_input.send_keys(manager.get_email())
-            next_button = wait.until(EC.visibility_of_element_located((By.ID, 'idSIButton9')))
-            next_button.click()
-            time.sleep(2)
-
-            pass_input = wait.until(EC.visibility_of_element_located((By.ID, 'i0118')))
-            pass_input.send_keys(manager.get_password())
-            next_button.click()
-            time.sleep(2)
-
-            try:
-                popup = wait.until(EC.visibility_of_element_located((By.ID, 'declineButton')))
-                popup.click()
-                print('[CONNECT]', 'Stay connected popup')
-            except:
-                pass
-
-            recherche(driver, value)
-        except:
-            print('[Recherche]', "ERROR: Account item not found")
-
-        try:
-            print('[Recherche]', "Connecté")
-            recherche(driver, value)
-        except:
-            print('[Recherche]', "ERROR: Already connected")
-    else:
-        recherche(driver, value)
+    recherche(driver, value)
 
 
 def recherche(driver: WebDriver, value: str):
@@ -803,10 +752,8 @@ def recherche(driver: WebDriver, value: str):
             print('[Recherche]', "Cookies closed")
         else:
             pass
-        driver.save_screenshot("recherche-task-done.png")
         time.sleep(2)
     except:
-        print('[Recherche]', "Break")
         pass
 
 
@@ -834,6 +781,36 @@ class SearchEnum:
     }
 
 
+def getDriver():
+    chrome_options = ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-dev-tools")
+    chrome_options.add_argument("--no-zygote")
+    chrome_options.add_argument("--single-process")
+    chrome_options.add_argument(f"--user-data-dir={mkdtemp()}")
+    chrome_options.add_argument(f"--data-path={mkdtemp()}")
+    chrome_options.add_argument(f"--disk- cache-dir={mkdtemp()}")
+    chrome_options.add_argument("--remote-debugging-pipe")
+    chrome_options.add_argument("--verbose")
+    chrome_options.add_argument("--log-path=/tmp")
+    chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
+
+    service = Service(
+        executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
+        service_log_path="/tmp/chromedriver.log"
+    )
+
+    driver = webdriver.Chrome(
+        service=service,
+        options=chrome_options
+    )
+
+    return driver
+
+
 def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
     print(context)
@@ -844,31 +821,7 @@ def lambda_handler(event, context):
 
     discord = os.getenv("DISCORD_WEBHOOK")
 
-    chrome_options = ChromeOptions()
-    chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument("--disable-gpu")
-    # chrome_options.add_argument("--disable-dev-tools")
-    # chrome_options.add_argument("--no-zygote")
-    # # chrome_options.add_argument("--single-process")
-    # chrome_options.add_argument(f"--user-data-dir={mkdtemp()}")
-    # chrome_options.add_argument(f"--data-path={mkdtemp()}")
-    # chrome_options.add_argument(f"--disk- cache-dir={mkdtemp()}")
-    # chrome_options.add_argument("--remote-debugging-pipe")
-    # chrome_options.add_argument("--verbose")
-    # chrome_options.add_argument("--log-path=/tmp")
-    # chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
-
-    service = Service(
-        # executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
-        # service_log_path="/tmp/chromedriver.log"
-    )
-
-    driver = webdriver.Chrome(
-        service=service,
-        options=chrome_options
-    )
+    driver = getDriver()
 
     print('[START]', '------------- ', email, '--------------')
     print("Current session is {}".format(driver.session_id))
@@ -902,13 +855,9 @@ def lambda_handler(event, context):
         webhook.add_embed(embed)
         webhook.execute()
 
-    with open(SCREENSHOT_PATH, 'rb') as screenshot_file:
-        screenshot_data = screenshot_file.read()
-
     return {
         "statusCode": 200,
         "body": json.dumps(event),
-        "screenshot": screenshot_data
     }
 
 

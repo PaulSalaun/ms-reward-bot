@@ -9,18 +9,18 @@
 Before start deploying the image on Docker then AWS, take your AWS accound id (AMAZON ID) and define the wanted server region (REGION). Then replace values in following command lines.
 
 1. Build the Docker Image :
-    ```console
+    ```sh
     docker build -t selenium-chrome-driver .
     ```
 2. Tag the Docker Image :
-    ```console
+    ```sh
     docker tag selenium-chrome-driver (AMAZON ID).dkr.ecr.(REGION).amazonaws.com/docker-images:v1.0.0
     ```
 3. Push the Docker Image to AWS ECR
-    ```console
+    ```sh
     aws ecr get-login-password --region (REGION) | docker login --username AWS --password-stdin (AMAZON ID).dkr.ecr.(REGION).amazonaws.com/docker-images
     ```
-    ```console
+    ```sh
     docker push (AMAZON ID).dkr.ecr.(REGION).amazonaws.com/docker-images:v1.0.0
     ```
 

@@ -13,8 +13,6 @@ RUN rm ./chrome-installer.sh
 RUN pip install selenium
 # For utils
 RUN pip install setuptools
-# To r/w in S3
-RUN pip install boto3
 # If necessary: discord webhook to obtain notifications
 RUN pip install discord_webhook
 
