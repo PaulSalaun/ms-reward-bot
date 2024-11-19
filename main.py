@@ -763,21 +763,24 @@ class SearchEnum:
         "quelle heure est-il ?": "quelle heure est-il au japon ?",
         "enrichissez votre vocabulaire": "signification polyphases",
         "suivez les élections": "résultats des élections",
-        "faites vos achats plus vite": "casque sony wh-1000xm4 prix",  # y
+        "faites vos achats plus vite": "casque sony wh-1000xm4 prix",
         "traduisez tout !": "traduction anglais étincellant",
-        "rechercher paroles de chanson": "parole chanson macarena",  # y
+        "rechercher paroles de chanson": "parole chanson macarena",
         "et si nous regardions ce film une nouvelle fois ?": "Cars 2",
-        "vous avez des symptômes?": "symptome grippe",  # n
-        "apprendre à cuisiner recettes": "recette de risotto",  # n
-        "maisons près de chez vous!": "laforet immobilier",  # y
+        "vous avez des symptômes?": "symptome grippe",
+        "apprendre à cuisiner recettes": "recette de risotto",
+        "maisons près de chez vous!": "laforet immobilier",
         "trouvez des emplacements pour rester!": "Hostel Copenhague",
-        "trop fatigué pour cuisiner ce soir?": "buffalo grill merignac",  # y
-        "conversion rapide de monnaie": "conversion couronne suedoise euro",  # y
+        "trop fatigué pour cuisiner ce soir?": "buffalo grill merignac",
+        "conversion rapide de monnaie": "conversion couronne suedoise euro",
         "vérifier la météo": "quel temps fera t il demain",
         "comment se porte l’économie": "SP 500",
         "qui a gagné": "résultat brest l1",
         "temps de jeu": "snapshot Minecraft",
-        "trouver un endroit à découvrir": "Suisse"
+        "trouver un endroit à découvrir": "Suisse",
+        "planifiez une petite escapade": "vol bordeaux açores",
+        "tenez-vous informé des sujets d’actualité": "actualité sb29",
+        "consulter postes à pourvoir": "poste à pourvoir mcdo"
     }
 
 
