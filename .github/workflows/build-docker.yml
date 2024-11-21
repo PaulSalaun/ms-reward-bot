@@ -40,10 +40,10 @@ jobs:
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-        run: docker tag selenium-chrome-driver $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/docker-images:v1.0.0
+        run: docker tag selenium-chrome-driver $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ms-reward-bot:v1.1.0
 
       - name: Push Docker image to ECR
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-        run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/docker-images:v1.0.0
+        run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ms-reward-bot:v1.1.0
