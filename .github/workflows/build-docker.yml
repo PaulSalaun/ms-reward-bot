@@ -13,13 +13,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Check for skip tag
+        id: check-skip-tag
+        run: |
+          if git log -1 --pretty=%B | grep -q [📖]'; then
+            echo "::set-output name=skip::true"
+          else
+            echo "::set-output name=skip::false"
+          fi
+
       - name: Set up QEMU
+        if: steps.check-skip-tag.outputs.skip == 'false'
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
+        if: steps.check-skip-tag.outputs.skip == 'false'
         uses: docker/setup-buildx-action@v2
 
       - name: Configure AWS credentials
+        if: steps.check-skip-tag.outputs.skip == 'false'
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -27,6 +39,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Log in to Amazon ECR
+        if: steps.check-skip-tag.outputs.skip == 'false'
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -34,15 +47,18 @@ jobs:
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
       - name: Build Docker image
+        if: steps.check-skip-tag.outputs.skip == 'false'
         run: docker build -t selenium-chrome-driver .
 
       - name: Tag Docker image
+        if: steps.check-skip-tag.outputs.skip == 'false'
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: docker tag selenium-chrome-driver $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ms-reward-bot:v1.1.0
 
       - name: Push Docker image to ECR
+        if: steps.check-skip-tag.outputs.skip == 'false'
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
