@@ -12,7 +12,7 @@
 2. Open project in your Integrated Development Environments like [VSCode](https://code.visualstudio.com/download)
 3. Install and configure a [Python interpreter](https://www.python.org/downloads/release/python-31011/)
 4. Install all dependencies : ```pip install -r requirements.txt```
-5. Add your MS profils in ```./profils/profils_list.json``` by following the structure.
+5. Add your MS profils in ```./profils/profils.json``` by following the structure.
 6. run main.py
 
 *Bot Selenium to complete ms reward daily quests by Paul SALAÜN*

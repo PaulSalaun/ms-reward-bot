@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-file_path = os.path.join(dir_path, "profils_list.json")
+file_path = os.path.join(dir_path, "profils.json")
 with open(file_path, 'r') as f:
     data = json.load(f)
 

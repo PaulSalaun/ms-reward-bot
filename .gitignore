@@ -2,5 +2,4 @@
 webdriver/
 *.json
 *.txt
-profils_list*
 *.spec
