@@ -20,9 +20,8 @@ CHROMEDRIVER_PATH = './chromedriver.exe'
 # DO DAILY TASKS
 def daily_tasks(profil_index: int, email: str, password: str) -> tuple[str, str]:
     optionshadow = Options()
-    # optionshadow.add_argument("--headless")
-    # driver = uc.Chrome(optionshadow, browser_executable_path="/usr/bin/chromium", driver_executable_path="./webdriver/chromedriver")
-    driver = uc.Chrome(optionshadow, version_main=129, headless=False)
+    optionshadow.add_argument("--headless")
+    driver = uc.Chrome(optionshadow, version_main=131, headless=False)
     print("Current session is {}".format(driver.session_id))
     driver.maximize_window()
     bingconnect.connect(driver, email, password, 1)
