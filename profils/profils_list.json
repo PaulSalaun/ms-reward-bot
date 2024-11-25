@@ -1,0 +1,16 @@
+{
+  "profils": [
+    {
+      "email": "account1@ms.com",
+      "password": "pass1",
+      "rewards": "0",
+      "streak": "0"
+    },
+    {
+      "email": "account2@ms.com",
+      "password": "pass2",
+      "rewards": "0",
+      "streak": "0"
+    }
+  ]
+}
