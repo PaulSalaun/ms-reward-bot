@@ -132,7 +132,10 @@ def rebooter(driver: WebDriver):
 def rechercheTask(driver: WebDriver, value: str):
     wait = WebDriverWait(driver, 10)
     time_wait.page_load(driver)
-    # driver.save_screenshot("screenshots/recherche_home.png")
+
+    driver.get(
+        "https://login.live.com/login.srf?wa=wsignin1.0&rpsnv=165&id=264960&wreply=https%3a%2f%2fwww.bing.com%2fsecure%2fPassport.aspx%3fedge_suppress_profile_switch%3d1%26requrl%3dhttps%253a%252f%252fwww.bing.com%252f%253fform%253dML2PCR%2526OCID%253dML2PCR%2526PUBL%253dRewardsDO%2526CREA%253dML2PCR%2526rwAutoFlyout%253dexb%2526wlexpsignin%253d1%26sig%3d1933D72C778565402BFDC21B769A641D%26nopa%3d2&wp=MBI_SSL&lc=1036&CSRFToken=2b834cc7-6ced-499c-bb0e-ba1be85b6095&cobrandid=c333cba8-c15c-4458-b082-7c8ce81bee85&aadredir=1&nopa=2")
+    time_wait.page_load(driver)
 
     connect = driver.find_element(By.ID, "id_l")
     # No connected ->
