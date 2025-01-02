@@ -40,15 +40,17 @@ def page_load(driver: WebDriver):
         pass
 
 
-def get_points(driver: WebDriver) -> str:
+def get_points(driver: WebDriver, previous: bool) -> str:
     wait = WebDriverWait(driver, 1)
-    try:
-        driver.get('https://rewards.microsoft.com/dashboard')
-    except InvalidSessionIdException:
-        print("[Rewards] Invalid session id")
-        driver.quit()
-        driver = getDriver()
-        driver.get('https://rewards.microsoft.com/dashboard')
+
+    if not previous:
+        try:
+            driver.get('https://rewards.microsoft.com/dashboard')
+        except InvalidSessionIdException:
+            print("[Rewards] Invalid session id")
+            driver.quit()
+            driver = getDriver()
+            driver.get('https://rewards.microsoft.com/dashboard')
 
     # Look for web error
     error_pipe(driver)
@@ -56,10 +58,11 @@ def get_points(driver: WebDriver) -> str:
     quit_page_cookies(driver)
 
     page_load(driver)
-    time.sleep(2)
+    time.sleep(4)
 
     rewards_nb = wait.until(EC.visibility_of_element_located(
         (By.CSS_SELECTOR, "#balanceToolTipDiv > p > mee-rewards-counter-animation > span"))).text
+    print('[POINTS]', rewards_nb)
     return rewards_nb
 
 
@@ -374,6 +377,7 @@ def random_task(driver: WebDriver, xpath: str):
         clicker.click()
         driver.switch_to.window(driver.window_handles[1])
         page_load(driver)
+        time.sleep(2)
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
@@ -783,6 +787,9 @@ class SearchEnum:
         "consulter postes à pourvoir": "poste à pourvoir mcdo"
     }
 
+def extract_digits(value: str) -> int:
+    return int(''.join([char for char in value if char.isdigit()]))
+
 
 def getDriver():
     chrome_options = ChromeOptions()
@@ -832,13 +839,16 @@ def lambda_handler(event, context):
     # Connect user from dict
     connect(driver, email, password)
 
+    # Get the user's previous rewards
+    previous_reward = get_points(driver, True)
+
     # Run daily tasks to obtain the streak
     define_daily(driver)
     # Run cards to obtain more rewards
     other_cards(driver)
 
     # Get the user's rewards
-    reward = get_points(driver)
+    reward = get_points(driver, False)
 
     # Disconnect user
     disconnect(driver)
@@ -846,15 +856,26 @@ def lambda_handler(event, context):
     driver.close()
     driver.quit()
 
-    print('[DATA]', 'Reward updated', reward)
+
+    gained = extract_digits(reward) - extract_digits(previous_reward)
+
+    if gained > 0:
+        print('[DATA]', 'Reward updated', reward, '(+' + str(gained)  + ')')
+    else:
+        print('[DATA]', 'No gain. Consider to restart')
     print('[END]', '------------- ', email, '--------------')
 
     if discord:
         webhook = DiscordWebhook(
             url=discord
         )
-        embed = DiscordEmbed(title=email,
-                             description="Points Reward : " + reward, color="03b2f8")
+        # Obtained last values
+        if gained > 0:
+            embed = DiscordEmbed(title=email,
+                                 description="Points Reward : " + reward + "*(+" + str(gained)  + ")*", color=" 448240")
+        else:
+            embed = DiscordEmbed(title=email,
+                                 description="No gain. Consider to restart", color="b51818")
         webhook.add_embed(embed)
         webhook.execute()
 

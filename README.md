@@ -1,5 +1,5 @@
  # How to use bot with AWS :
- ###### Based on [Shilleh tutorial](https://towardsdev.com/easily-use-selenium-with-aws-lambda-2cc49ca43b93)
+ ###### Based on [@Shilleh tutorial](https://towardsdev.com/easily-use-selenium-with-aws-lambda-2cc49ca43b93)
 
 ---
 #### This bot is a personal project for web scraping; I am not responsible for its use or results. Using bots for task automation is against Microsoft Reward rules and may lead to account bans. 
