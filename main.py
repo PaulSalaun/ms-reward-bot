@@ -40,7 +40,7 @@ def page_load(driver: WebDriver):
         pass
 
 
-def get_points(driver: WebDriver, previous: bool) -> str:
+def get_points(driver: WebDriver, previous: bool) -> tuple[str, str]:
     wait = WebDriverWait(driver, 1)
 
     if not previous:
@@ -62,8 +62,10 @@ def get_points(driver: WebDriver, previous: bool) -> str:
 
     rewards_nb = wait.until(EC.visibility_of_element_located(
         (By.CSS_SELECTOR, "#balanceToolTipDiv > p > mee-rewards-counter-animation > span"))).text
-    print('[POINTS]', rewards_nb)
-    return rewards_nb
+    streak = wait.until(EC.visibility_of_element_located(
+        (By.CSS_SELECTOR, "#dailypointToolTipDiv > p > mee-rewards-counter-animation > span"))).text
+    print('[POINTS]', rewards_nb, ' - ', streak)
+    return rewards_nb, streak
 
 
 # 1: DAILY / 2: PC SEARCH / 3: MOBILE SEARCH
@@ -840,7 +842,7 @@ def lambda_handler(event, context):
     connect(driver, email, password)
 
     # Get the user's previous rewards
-    previous_reward = get_points(driver, True)
+    previous_reward, previous_streak = get_points(driver, True)
 
     # Run daily tasks to obtain the streak
     define_daily(driver)
@@ -848,7 +850,7 @@ def lambda_handler(event, context):
     other_cards(driver)
 
     # Get the user's rewards
-    reward = get_points(driver, False)
+    reward, streak = get_points(driver, False)
 
     # Disconnect user
     disconnect(driver)
@@ -872,7 +874,9 @@ def lambda_handler(event, context):
         # Obtained last values
         if gained > 0:
             embed = DiscordEmbed(title=email,
-                                 description="Points Reward : " + reward + "*(+" + str(gained)  + ")*", color=" 448240")
+                                 description="Points Reward: " + reward + "  *(+" + str(
+                                     gained) + ")*\nStreak: " + streak,
+                                 color="448240")
         else:
             embed = DiscordEmbed(title=email,
                                  description="No gain. Consider to restart", color="b51818")
