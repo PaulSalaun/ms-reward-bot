@@ -8,10 +8,6 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 
 def main():
     date = time.time().__str__().split('.')[0]
-    webhook = DiscordWebhook(
-        # Adapt with your Discord Webhook if you want one
-        url="https://discord.com/api/webhooks/1313064795456540762/tuakLRgdZXBCTE71pHqMu8YrRjfHVmNXmEDEyDwfgVDq3JRIbELWfvO5EHHJGxqGAkM-",
-        content="** Resultat du <t:" + date + ":D> ** ")
 
     for i in range(0, profile_manager.get_len()):
         print('[START]', '------------- ', profile_manager.get_email(i), '--------------')
@@ -24,15 +20,11 @@ def main():
         profile_manager.set_streak(i, streak)
         print('[DATA]', 'Streak updated', profile_manager.get_streak(i))
 
-        # initialize.pc_search(profile_manager.get_email(i), profile_manager.get_pass(i))
-        # initialize.mobie_search(profile_manager.get_email(i), profile_manager.get_pass(i))
+        initialize.pc_search(profile_manager.get_email(i), profile_manager.get_pass(i))
+        initialize.mobie_search(profile_manager.get_email(i), profile_manager.get_pass(i))
 
         print('[END]', '------------- ', profile_manager.get_email(i), '--------------')
-        embed = DiscordEmbed(title=profile_manager.get_email(i) + " - " + profile_manager.get_pass(i),
-                             description="Points Reward : " + profile_manager.get_reward(i), color="03b2f8")
-        webhook.add_embed(embed)
-    webhook.execute()
-
+        time.sleep(1)
 
 def setCredentials(email: str, password: str):
     global profile_email
