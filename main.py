@@ -63,7 +63,7 @@ def get_points(driver: WebDriver, previous: bool) -> tuple[str, str]:
     rewards_nb = wait.until(EC.visibility_of_element_located(
         (By.CSS_SELECTOR, "#balanceToolTipDiv > p > mee-rewards-counter-animation > span"))).text
     streak = wait.until(EC.visibility_of_element_located(
-        (By.CSS_SELECTOR, "#dailypointToolTipDiv > p > mee-rewards-counter-animation > span"))).text
+        (By.CSS_SELECTOR, "#streakToolTipDiv > p > mee-rewards-counter-animation > span"))).text
     print('[POINTS]', rewards_nb, ' - ', streak)
     return rewards_nb, streak
 
@@ -340,7 +340,8 @@ def other_cards(driver: WebDriver):
         print('[CARDS]', 'Started')
         more_cards(driver)
     except Exception as e:
-        print("[CARDS]", "No more cards")
+        print("[CARDS]", "No more cards, return to main menu")
+        driver.get('https://rewards.microsoft.com/dashboard')
         pass
 
 

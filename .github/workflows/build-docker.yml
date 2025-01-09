@@ -12,6 +12,33 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get latest version
+        id: version
+        run: |
+          CURRENT_VERSION=$(git tag --list "v*" | sort -V | tail -n 1 || echo "v1.0.0")
+          if [[ -z "$CURRENT_VERSION" ]]; then
+            CURRENT_VERSION="v1.0.0"
+          fi
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          
+          # Parse the version numbers
+          IFS='.' read -r major minor patch <<< "${CURRENT_VERSION#v}"
+          
+          # Get commit message
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          
+          if [[ "$COMMIT_MSG" == fix:* ]]; then
+            NEW_VERSION="v$major.$minor.$((patch + 1))"
+          elif [[ "$COMMIT_MSG" == feat:* ]]; then
+            NEW_VERSION="v$major.$((minor + 1)).0"
+          else
+            NEW_VERSION="$CURRENT_VERSION"
+          fi
+          
+          echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -40,10 +67,15 @@ jobs:
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-        run: docker tag selenium-chrome-driver $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ms-reward-bot:v1.3.0
+        run: docker tag selenium-chrome-driver $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ms-reward-bot:${{ steps.version.outputs.new }}
 
       - name: Push Docker image to ECR
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-        run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ms-reward-bot:v1.3.0
+        run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ms-reward-bot:${{ steps.version.outputs.new }}
+
+      - name: Create and push tag
+        run: |
+          git tag ${{ steps.version.outputs.new }}
+          git push origin ${{ steps.version.outputs.new }}
